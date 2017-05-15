@@ -48,7 +48,7 @@ namespace NANDAdder
         static string bitAdd(byte a, byte b)
         {
             var ret = BitAdder.Add(a, b);
-            return string.Format("{0} + {1} = {2}", a, b, (ret.carry > 0 ? "1" : "") + ret.sum);
+            return string.Format("{0} + {1} = {2}", a, b, (ret.carry > 0 ? "1" : " ") + ret.sum);
         }
     }
 }
