@@ -1,3 +1,4 @@
+![](./imgs/vault818.png) 
 # Vault818
 This is a repository for random ideas, demos and small tools. The layout of this repository is inspired by the [Fallout Shelter](https://en.wikipedia.org/wiki/Fallout_Shelter) game. All programs are loosely categorized into different shelter [room types](http://www.ign.com/wikis/fallout-shelter/Rooms). Most programs are self-contained with one exception - all programs are allowed to refer to common libraries under the _Power Generator_ folder.
 
