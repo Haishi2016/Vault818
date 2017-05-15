@@ -26,7 +26,7 @@ namespace DigitClassifier
             if (miniBatchSize <= 0 || miniBatchSize > traingSetSize)
                 throw new ArgumentException("Mini-batch size needs to a positive value smaller than training set size.");
 
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < epochs; i++)
             {
                 Console.WriteLine("Running training epoch " + i);
                 Console.WriteLine("   Training...");
@@ -39,13 +39,15 @@ namespace DigitClassifier
                 {
                     Console.WriteLine("   Validating " + testSize + " test pictures...");
                     int count = 0;
+                    Random rand = new Random();
+                    int startIndex = rand.Next(0, testData.Count - testSize + 1);
                     for (int v = 0; v < testSize; v++)
                     {
-                        var detection = this.Detect(CreateVector.Dense<double>(MINSTDataLoader.Normalize(testData[v].Image)));
-                        if (detection == testData[v].Label)
+                        var detection = this.Detect(CreateVector.Dense<double>(MINSTDataLoader.Normalize(testData[v+startIndex].Image)));
+                        if (detection == testData[v+startIndex].Label)
                             count++;
                     }
-                    Console.WriteLine("    Detected {0} out of {1} pictures, correct rate is: {2}", count, testSize, count * 1.0 / testSize);
+                    Console.WriteLine("   Detected {0} out of {1} pictures, correct rate is: {2:0.0%}", count, testSize, count * 1.0 / testSize);
                 }
             }
         }
