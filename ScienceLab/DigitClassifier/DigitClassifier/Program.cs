@@ -37,7 +37,7 @@ namespace DigitClassifier
             Console.WriteLine("\nNetwork is trained!");
             while (true)
             {
-                Console.Write(string.Format("\nPlease enter a test image index [0 - {0}]. Enter '-1' to evaluate all test images:", testingSet.Count - 1));
+                Console.Write(string.Format("\nPlease enter a test image index [0 - {0}]. Enter '-1' to evaluate all test images. Enter '-2' to exit:", testingSet.Count - 1));
                 if (int.TryParse(Console.ReadLine(), out index))
                 {
                     if (index == -1)
@@ -56,19 +56,18 @@ namespace DigitClassifier
                                 Console.Write("X");
                         }
                         Console.WriteLine("\nDetected {0} out of {1} pictures, correct rate is: {2:0.0%}", count, testingSet.Count, count * 1.0 / testingSet.Count);
-                        break;
                     }
-                    else if (index >=0 && index < testingSet.Count)
+                    else if (index >= 0 && index < testingSet.Count)
                     {
                         Console.WriteLine(string.Format("Test image: #{0} ({1})", index, testingSet[index].Label));
                         MINSTDataVisualizer.PrintImage(testingSet[index].Image, 28);
                         var detection = network.Detect(CreateVector.Dense<double>(MINSTDataLoader.Normalize(testingSet[index].Image)));
                         Console.WriteLine(string.Format("\nDetected number: {0} - {1}", detection, detection == testingSet[index].Label ? "SUCCESS!" : "FAIL!"));
                     }
+                    else if (index == -2)
+                        break;
                 }
             }
-            Console.WriteLine("Press [Enter] to exit.");
-            Console.ReadLine();
         }
     }
 }
