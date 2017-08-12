@@ -17,13 +17,13 @@ Classroom holds a number of projects for my Computer Science class.
 Diner is a relaxing environment where old and new ideas are causally shared. This folder is the home of small projects. There isn't a theme - everything goes here. 
 
 - [**MathNetTests**](./Diner/MathNetTests) includes a few quick tests I wrote when I learned how to use the [MathNet.Numerics](https://numerics.mathdotnet.com/) library. ![C# 7.0](./imgs/c-sharp-7.png)
-- **MongoToGremlin** is a program that transforms some MongoDB data into graphs using [Gremlin](https://en.wikipedia.org/wiki/Gremlin_(programming_language)). The data is originated from [this GitHub project](https://github.com/scotch-io/mean-google-maps). This code is tested against [Microsoft Azure Cosmos DB](https://azure.microsoft.com/en-us/services/cosmos-db/?WT.srch=1&WT.mc_id=AID__SEM_xaYpE5Fy)
+- [**MongoToGremlin**](./Diner/MongoToGremlin) is a program that transforms some MongoDB data into graphs using [Gremlin](https://en.wikipedia.org/wiki/Gremlin_(programming_language)). The data is originated from [this GitHub project](https://github.com/scotch-io/mean-google-maps). This code is tested against [Microsoft Azure Cosmos DB](https://azure.microsoft.com/en-us/services/cosmos-db/?WT.srch=1&WT.mc_id=AID__SEM_xaYpE5Fy)
 ![Node.js](./imgs/node-js.png) ![Gremlin](./imgs/gremlin.png) ![Cosmos DB](./imgs/cosmos-db.png) ![MongoDB](./imgs/mongo-db.png)
-- **NANDAdder** implements a NAND gate, then a bit adder on top of NAND gates, and then a byte adder on top of bit adders. ![C# 7.0](./imgs/c-sharp-7.png)
+- [**NANDAdder**](./Diner/NANDAdder) implements a NAND gate, then a bit adder on top of NAND gates, and then a byte adder on top of bit adders. ![C# 7.0](./imgs/c-sharp-7.png)
 
 ## Elevator
 There are always new ways to write programs. New programming languages and frameworks come and go, and they leave a bunch of "Hello, World!" programs in the elevator.
-- **HelloWorld-ProtoActor** Hello, World! from [Proto Actor](http://proto.actor/). ![C# 7.0](./imgs/c-sharp-7.png) ![Proto Actor](./imgs/proto-actor.png)
+- [**HelloWorld-ProtoActor**](./Elevator/HelloWorld-ProtoActor) Hello, World! from [Proto Actor](http://proto.actor/). ![C# 7.0](./imgs/c-sharp-7.png) ![Proto Actor](./imgs/proto-actor.png)
  
 
 ## Fitness Room (E)
@@ -62,7 +62,7 @@ Programs related to computer graphics.
 ## Science Lab
 Science Lab is the home of AI and ML focused projects.
 
-- **DigitClassifier** implements a simple neuron network that recognize handwritten digits. ![C# 7.0](./imgs/c-sharp-7.png) ![ML](./imgs/ml.png)
+- [**DigitClassifier**](./ScienceLab/DigitClassifier) implements a simple neuron network that recognize handwritten digits. ![C# 7.0](./imgs/c-sharp-7.png) ![ML](./imgs/ml.png)
 
 ## Storage Room
 [EMPTY]
