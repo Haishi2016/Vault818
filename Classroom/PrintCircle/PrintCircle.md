@@ -112,3 +112,9 @@ to calculate corresponding (x,y). The calculation is encapsulated in a separate 
 ### Future Improvements
 * Try to plug in a different function to the program.
 * A "pixel" on console is not a perfect square. Instead, it's a tall rectangle. How can you adapt your program to compensate?
+
+## Closing Thoughts
+
+* There are often multiple solutions to the same problem, with pros and cons in each of them. Solution 1 is quite efficient, but it’s coded specifically to print a circle. It’s hard to adapt the solution to plot a different function. Solution 2, on the other hand, is quite generic because it does a brute-force pixel scan. However, it occurs a O(n^2) computational complexity. Solution 3 presents a quite powerful solution that decouples computation and presentation, so that the code is not subject to streaming limitations. However, it does require additional memory to act as the buffer. 
+
+* When you design your own programs, lots of decisions are driven by the requirements you receive. You should always make sure you understand the requirements thoroughly, and then make tradeoffs among viable solutions. You should understand both functional requirements – what your program is supposed to do and non-functional requirements – how your program is supposed to perform. For example, are your required to plot other functions? Are gaps in plots acceptable? Are you constrained by memory? Is speed critical? Based on the answers to these questions, you may end up with vastly different designs. 
