@@ -3,6 +3,7 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Complex;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,12 +14,14 @@ namespace DigitClassifier
     {
         private Vector<double> mBias;
         private Matrix<double> mWeights;
-        public Layer(int size, int sizeofPreviousLayer)
+        public Layer(int size, int sizeofPreviousLayer) : this(CreateVector.Random<double>(size, new Normal(0.0, 1.0)),
+                            sizeofPreviousLayer > 0 ? CreateMatrix.Random<double>(size, sizeofPreviousLayer, new Normal(0.0, 1.0)) : null)
         {
-            var distribution = new Normal(0.0, 1.0);
-            mBias = CreateVector.Random<double>(size, distribution);
-            if (sizeofPreviousLayer > 0)
-                mWeights = CreateMatrix.Random<double>(size, sizeofPreviousLayer, distribution);
+        }
+        public Layer(Vector<double> bias, Matrix<double> weights)
+        {
+            mBias = bias;
+            mWeights = weights;
         }
         public (Vector<double> activation, Vector<double> weightedInput) FeedForward(Vector<double> activations)
         {
@@ -45,6 +48,67 @@ namespace DigitClassifier
         public void AdjustBias(Vector<double> delta)
         {
             mBias = mBias - delta;
+        }
+
+        public void Save(StreamWriter writer)
+        {
+            if (mWeights == null)
+                writer.WriteLine(mBias.Count + ";0;0");
+            else 
+                writer.WriteLine(mBias.Count + ";" + mWeights.ColumnCount + ";" + mWeights.RowCount);
+
+            var biasArray = mBias.ToArray<double>();
+            for (int i = 0; i < biasArray.Length; i++)
+            {
+                writer.Write(biasArray[i]);
+                writer.Write(";");
+            }
+            writer.WriteLine();
+            if (mWeights != null)
+            {
+                for (int y = 0; y < mWeights.RowCount; y++)
+                {
+                    for (int x = 0; x < mWeights.ColumnCount; x++)
+                    {
+                        writer.Write(mWeights[y, x]);
+                        writer.Write(";");
+                    }
+                    writer.WriteLine();
+                }
+            }
+        }
+        public static Layer Load(StreamReader reader)
+        {
+            var strContent = reader.ReadLine();
+            var values = strContent.Split(';');
+            int biascount = int.Parse(values[0]);
+            int colCount = int.Parse(values[1]);
+            int rowCount = int.Parse(values[2]);
+
+            strContent = reader.ReadLine();
+            values = strContent.Split(';');
+            var biasArray = new double[biascount];
+            for (int i = 0; i < biascount; i++)
+                biasArray[i] = double.Parse(values[i]);
+            var bias = CreateVector.DenseOfArray<double>(biasArray);
+
+            if (colCount != 0 && rowCount != 0)
+            {
+                double[,] mValues = new double[rowCount, colCount];
+                for (int y = 0; y < rowCount; y++)
+                {
+                    strContent = reader.ReadLine();
+                    values = strContent.Split(';');
+                    for (int x = 0; x < colCount; x++)
+                    {
+                        mValues[y, x] = double.Parse(values[x]);
+                    }
+                }
+                var weights = CreateMatrix.DenseOfArray(mValues);
+                return new Layer(bias, weights);
+            }
+            else
+                return new Layer(bias, null);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,9 +30,21 @@ namespace DigitClassifier
             Console.WriteLine(string.Format("Here's a random picture from the training set: #{0} ({1})", index, trainingSet[index].Label));
             MINSTDataVisualizer.PrintImage(trainingSet[index].Image, 28);
 
-            //Train the network
-            Network network = new Network(784, 30, 10);
-            network.Train(trainingSet, 30, 10, 3.0, testingSet, 10);
+            Network network;
+
+            if (args.Length > 0)
+            {
+                using (StreamReader reader = new StreamReader(File.OpenRead(args[0])))
+                {
+                    network = Network.Load(reader);
+                }
+            }
+            else
+            {
+                network = new Network(new QuadraticCost(), 784, 30, 10);
+                //Train the network
+                network.Train(trainingSet, 30, 10, 3.0, testingSet, 10);
+            }
 
             //Now validate
             Console.WriteLine("\nNetwork is trained!");
@@ -66,6 +79,15 @@ namespace DigitClassifier
                     }
                     else if (index == -2)
                         break;
+                    else if (index == -3)
+                    {
+                        Console.Write("Please enter file name: ");
+                        string fileName = Console.ReadLine();
+                        using (StreamWriter writer = new StreamWriter(File.Create(fileName)))
+                        {
+                            network.Save(writer);
+                        }
+                    }
                 }
             }
         }

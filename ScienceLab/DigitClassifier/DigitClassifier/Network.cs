@@ -1,6 +1,7 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,14 +11,27 @@ namespace DigitClassifier
     public class Network
     {
         private Layer[] mLayers;
-        public Network(params int[] nodeCounts)
+        private ICostFunction mCostFunction;
+
+        public Network(string costFunctioName)
         {
+            mCostFunction = new QuadraticCost();
+        }
+        public Network(params int[] nodeCounts)
+            :this(new QuadraticCost(), nodeCounts)
+        {
+
+        }
+        public Network(ICostFunction costFunction, params int[] nodeCounts)
+        {
+            mCostFunction = costFunction;
             if (nodeCounts == null || nodeCounts.Length == 0)
                 throw new ArgumentNullException();
             mLayers = new Layer[nodeCounts.Length];
             for (int i = 0; i < mLayers.Length; i++)
                 mLayers[i] = new Layer(nodeCounts[i], i==0?0: nodeCounts[i-1]);
         }
+
         public void Train(List<(byte[] Image, byte Label)> data, int epochs, int miniBatchSize, double learningRate, List<(byte[] Image, byte Label)> testData = null, int testSize = 10)
         {
             if (data == null)
@@ -85,7 +99,6 @@ namespace DigitClassifier
             Vector<double>[] activations = new Vector<double>[layerCount];
             Vector<double>[] weightedInputs = new Vector<double>[layerCount];
 
-
             //Feedforward
             activations[0] = data.Image.Vectorize();
             for (int i = 1; i < layerCount; i++)
@@ -97,11 +110,12 @@ namespace DigitClassifier
 
             //Output error
             var expected = toResultVector(data.Label);
-            var error = (activations[layerCount-1] - expected).PointwiseMultiply(VectorMath.SigmoidPrime(weightedInputs[layerCount - 1]));
+            var error = mCostFunction.Delta(activations[layerCount-1], expected, weightedInputs[layerCount - 1]);
 
             
             nablaB[layerCount - 1] = error;
             nablaW[layerCount - 1] = error.ToColumnMatrix() * activations[layerCount - 2].ToRowMatrix();
+
             //Backpropagate the error
             for (int i = mLayers.Length-2; i >=1; i--)
             {
@@ -159,6 +173,33 @@ namespace DigitClassifier
                     label == 9? 1.0:0.0
                 }
                 );
+        }
+        public static Network Load(StreamReader reader)
+        {
+            var strContent = reader.ReadLine();
+            var values = strContent.Split(';');
+            string costFunction = values[0];
+            int layerCount = int.Parse(values[1]);
+
+            Layer[] layers = new Layer[layerCount];
+            for (int i = 0; i < layers.Length; i++)
+                layers[i] = Layer.Load(reader);
+
+            Network network = new Network(costFunction);
+            network.LoadLayers(layers);
+            return network;
+        }
+
+        public void Save(StreamWriter writer)
+        {
+            writer.WriteLine(mCostFunction.GetType().Name + ";" + mLayers.Length);
+            for (int i = 0; i < mLayers.Length; i++)
+                mLayers[i].Save(writer);
+        }
+
+        public void LoadLayers(Layer[] layers)
+        {
+            this.mLayers = layers;
         }
     }
 }

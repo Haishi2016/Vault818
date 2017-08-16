@@ -27,9 +27,9 @@ MongoClient.connect('...', function (err, db){
                     });
                     db.close();
 		   
-		            var _flagCheck = setInterval(function() {
-		                if (count >=20)
-				        process.exit();}, 100);
+                    var _flagCheck = setInterval(function() {
+                        if (count >=20)
+                            process.exit();}, 100);
                 });
             });
         });
