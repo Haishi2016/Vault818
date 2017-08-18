@@ -15,13 +15,13 @@ namespace DigitClassifier
         static void Main(string[] args)
         {
             //Load training data
-            var trainingImages = MINSTDataLoader.LoadImages(@"D:\Haishi-2017\Vault818-Local\MNIST\train-images-idx3-ubyte.gz");
-            var trainingLabels = MINSTDataLoader.LoadLabels(@"D:\Haishi-2017\Vault818-Local\MNIST\train-labels-idx1-ubyte.gz");
+            var trainingImages = MINSTDataLoader.LoadImages(@"C:\HaishiRooster\Data\MINST\train-images-idx3-ubyte.gz");
+            var trainingLabels = MINSTDataLoader.LoadLabels(@"C:\HaishiRooster\Data\MINST\train-labels-idx1-ubyte.gz");
             var trainingSet = MINSTDataLoader.CombineImagesAndLabels(trainingImages, trainingLabels);
 
             //Load test data
-            var testingImages = MINSTDataLoader.LoadImages(@"D:\Haishi-2017\Vault818-Local\MNIST\t10k-images-idx3-ubyte.gz");
-            var testingLabels = MINSTDataLoader.LoadLabels(@"D:\Haishi-2017\Vault818-Local\MNIST\t10k-labels-idx1-ubyte.gz");
+            var testingImages = MINSTDataLoader.LoadImages(@"C:\HaishiRooster\Data\MINST\t10k-images-idx3-ubyte.gz");
+            var testingLabels = MINSTDataLoader.LoadLabels(@"C:\HaishiRooster\Data\MINST\t10k-labels-idx1-ubyte.gz");
             var testingSet = MINSTDataLoader.CombineImagesAndLabels(testingImages, testingLabels);
 
             //Print training set information and a sample image
@@ -42,9 +42,9 @@ namespace DigitClassifier
             }
             else
             {
-                network = new Network(new QuadraticCost(), 784, 30, 10);
+                network = new Network(new CrossEntropyCost(), 784, 30, 10);
                 //Train the network
-                network.Train(trainingSet, 30, 10, 3.0, testingSet, 10);
+                network.Train(trainingSet, 30, 10, 0.5, testingSet, 10);
             }
 
             //Now validate
