@@ -1,4 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
+using SharpNet;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -59,7 +60,7 @@ namespace DigitClassifier
                         Console.Write(string.Format("Detecting {0} pictures", testingSet.Count));
                         for (int i = 0; i < testingSet.Count; i++)
                         {
-                            var detection = network.Detect(CreateVector.Dense<double>(MINSTDataLoader.Normalize(testingSet[i].Image)));
+                            var detection = network.Detect(CreateVector.Dense<double>(testingSet[i].Image));
                             if (detection == testingSet[i].Label)
                             {
                                 Console.Write(".");
@@ -74,7 +75,7 @@ namespace DigitClassifier
                     {
                         Console.WriteLine(string.Format("Test image: #{0} ({1})", index, testingSet[index].Label));
                         MINSTDataVisualizer.PrintImage(testingSet[index].Image, 28);
-                        var detection = network.Detect(CreateVector.Dense<double>(MINSTDataLoader.Normalize(testingSet[index].Image)));
+                        var detection = network.Detect(CreateVector.Dense<double>(testingSet[index].Image));
                         Console.WriteLine(string.Format("\nDetected number: {0} - {1}", detection, detection == testingSet[index].Label ? "SUCCESS!" : "FAIL!"));
                     }
                     else if (index == -2)

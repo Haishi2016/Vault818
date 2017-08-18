@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DigitClassifier
+namespace SharpNet
 {
     public class Network
     {
@@ -32,7 +32,7 @@ namespace DigitClassifier
                 mLayers[i] = new Layer(nodeCounts[i], i==0?0: nodeCounts[i-1]);
         }
 
-        public void Train(List<(byte[] Image, byte Label)> data, int epochs, int miniBatchSize, double learningRate, List<(byte[] Image, byte Label)> testData = null, int testSize = 10)
+        public void Train(List<(double[] Image, byte Label)> data, int epochs, int miniBatchSize, double learningRate, List<(double[] Image, byte Label)> testData = null, int testSize = 10)
         {
             if (data == null)
                 throw new ArgumentNullException();
@@ -57,7 +57,7 @@ namespace DigitClassifier
                     int startIndex = rand.Next(0, testData.Count - testSize + 1);
                     for (int v = 0; v < testSize; v++)
                     {
-                        var detection = this.Detect(CreateVector.Dense<double>(MINSTDataLoader.Normalize(testData[v+startIndex].Image)));
+                        var detection = this.Detect(CreateVector.Dense<double>(testData[v+startIndex].Image));
                         if (detection == testData[v+startIndex].Label)
                             count++;
                     }
@@ -65,7 +65,7 @@ namespace DigitClassifier
                 }
             }
         }
-        private void updateMiniBatch(List<(byte[] Image, byte Label)> data, int startIndex, int batchSize, double leariningRate)
+        private void updateMiniBatch(List<(double[] Image, byte Label)> data, int startIndex, int batchSize, double leariningRate)
         {
             (Vector<double> nabulaB, Matrix<double> nabulaW)[] layeredSigmas = new(Vector<double> nabulaB, Matrix<double> nabulaW)[mLayers.Length];
             for (int i = startIndex; i <= startIndex + batchSize -1; i++)
@@ -91,7 +91,7 @@ namespace DigitClassifier
                 mLayers[l].AdjustWeights(leariningRate / batchSize * layeredSigmas[l].nabulaW);
             }
         }
-        private (Vector<double>[] nabulaB, Matrix<double>[] nabulaW) backPropagation((byte[] Image, byte Label) data)
+        private (Vector<double>[] nabulaB, Matrix<double>[] nabulaW) backPropagation((double[] Image, byte Label) data)
         {
             int layerCount = mLayers.Length;
             Vector<double>[] nablaB = new Vector<double>[layerCount];

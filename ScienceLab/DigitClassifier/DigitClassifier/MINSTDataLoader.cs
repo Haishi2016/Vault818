@@ -86,15 +86,15 @@ namespace DigitClassifier
             }
             return ret;
         }
-        public static List<(byte[] Image,byte Label)> CombineImagesAndLabels(List<byte[]> images, List<byte> labels)
+        public static List<(double[] Image,byte Label)> CombineImagesAndLabels(List<byte[]> images, List<byte> labels)
         {
             if (images == null | labels == null)
                 throw new ArgumentNullException();
             if (images.Count != labels.Count)
                 throw new ArgumentException("List lengths don't match.");
-            List<(byte[], byte)> ret = new List<(byte[], byte)>();
+            List<(double[], byte)> ret = new List<(double[], byte)>();
             for (int i = 0; i < images.Count; i++)
-                ret.Add((images[i], labels[i]));
+                ret.Add((MINSTDataLoader.Normalize(images[i]), labels[i]));
             return ret;
         }
 

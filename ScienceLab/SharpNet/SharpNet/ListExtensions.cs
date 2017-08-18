@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DigitClassifier
+namespace SharpNet
 {
     public static class ListExtensions
     {
@@ -22,11 +22,10 @@ namespace DigitClassifier
                 list[n] = value;
             }
         }
-        public static Vector<double> Vectorize(this IList<byte> list)
+        public static Vector<double> Vectorize(this IList<double> list)
         {
             double[] array = new double[list.Count];
-            for (int i = 0; i < list.Count; i++)
-                array[i] = list[i] / 255.0;
+            list.CopyTo(array, 0);
             return CreateVector.DenseOfArray<double>(array);
         }
     }

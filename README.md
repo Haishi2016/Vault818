@@ -62,8 +62,8 @@ Programs related to computer graphics.
 ## Science Lab
 Science Lab is the home of AI and ML focused projects.
 
-- [**DigitClassifier**](./ScienceLab/DigitClassifier) implements a simple neuron network that recognize handwritten digits. ![C# 7.0](./imgs/c-sharp-7.png) ![ML](./imgs/ml.png)
-
+- [**DigitClassifier**](./ScienceLab/DigitClassifier) implements a simple neural network that recognizes handwritten digits. ![C# 7.0](./imgs/c-sharp-7.png) ![ML](./imgs/ml.png)
+- [**SharpNet**](./ScienceLab/SharpNet) a simple neural netowrk implemented in C#. ![C# 7.0](./imgs/c-sharp-7.png) ![ML](./imgs/ml.png)
 ## Storage Room
 [EMPTY]
 
