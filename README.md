@@ -12,6 +12,8 @@ This is a repository for random ideas, demos and small tools. The layout of this
 Classroom holds a number of projects for my Computer Science class. 
 
 - [**PrintCircle**](./Classroom/PrintCircle) includes three different implementations of a program that prints a circle on the console. ![Java](./imgs/java.png)
+- [**PrintImage**](./Classroom/PrintImage) includes a sample program that converts an image to an ASCII image. ![Java](./imgs/java.png)
+
 
 ## Diner
 Diner is a relaxing environment where old and new ideas are causally shared. This folder is the home of small projects. There isn't a theme - everything goes here. 
