@@ -42,7 +42,13 @@ namespace DigitClassifier
             }
             else
             {
-                network = new Network(new CrossEntropyCost(), 784, 30, 10);
+                ////MSR
+                //network = new Network(new QuadraticCost(), 784, 30, 10);
+                ////Train the network
+                //network.Train(trainingSet, 30, 10, 3, testingSet, 10);
+
+                //Cross-entropy
+                network = new Network(new CrossEntropyCost(), 784, 100, 10);
                 //Train the network
                 network.Train(trainingSet, 30, 10, 0.5, testingSet, 10);
             }
