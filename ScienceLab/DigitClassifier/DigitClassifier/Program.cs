@@ -47,10 +47,15 @@ namespace DigitClassifier
                 ////Train the network
                 //network.Train(trainingSet, 30, 10, 3, testingSet, 10);
 
-                //Cross-entropy
+                ////Cross-entropy
+                //network = new Network(new CrossEntropyCost(), 784, 100, 10);
+                ////Train the network
+                //network.Train(trainingSet, 30, 10, 0.5, testingSet, 10);
+
+                //Cross-entropy regulated
                 network = new Network(new CrossEntropyCost(), 784, 100, 10);
                 //Train the network
-                network.Train(trainingSet, 30, 10, 0.5, testingSet, 10);
+                network.Train(trainingSet, 60, 10, 0.1, testingSet, 10, 5.0);
             }
 
             //Now validate

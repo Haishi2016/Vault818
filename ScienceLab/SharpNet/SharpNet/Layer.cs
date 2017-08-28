@@ -41,9 +41,9 @@ namespace SharpNet
                 return mWeights;
             }
         }
-        public void AdjustWeights(Matrix<double> delta)
+        public void AdjustWeights(Matrix<double> delta, double weighDecay)
         {
-            mWeights = mWeights - delta;
+            mWeights = mWeights * weighDecay - delta;
         }
         public void AdjustBias(Vector<double> delta)
         {

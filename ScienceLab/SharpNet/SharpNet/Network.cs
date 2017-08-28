@@ -12,13 +12,14 @@ namespace SharpNet
     {
         private Layer[] mLayers;
         private ICostFunction mCostFunction;
+        
 
         public Network(string costFunctioName)
         {
             mCostFunction = new QuadraticCost();
         }
-        public Network(params int[] nodeCounts)
-            :this(new QuadraticCost(), nodeCounts)
+        public Network(double regulationLambda = 0.0, params int[] nodeCounts)
+            :this(new QuadraticCost(),  nodeCounts)
         {
 
         }
@@ -32,7 +33,7 @@ namespace SharpNet
                 mLayers[i] = new Layer(nodeCounts[i], i==0?0: nodeCounts[i-1]);
         }
 
-        public void Train(List<(double[] Image, byte Label)> data, int epochs, int miniBatchSize, double learningRate, List<(double[] Image, byte Label)> testData = null, int testSize = 10)
+        public void Train(List<(double[] Image, byte Label)> data, int epochs, int miniBatchSize, double learningRate, List<(double[] Image, byte Label)> testData = null, int testSize = 10, double regulationLambda = 0.0)
         {
             if (data == null)
                 throw new ArgumentNullException();
@@ -47,7 +48,7 @@ namespace SharpNet
                 data.Shuffle();
                 for (int j = 0; j < traingSetSize / miniBatchSize; j++)
                 {
-                    updateMiniBatch(data, j * miniBatchSize, miniBatchSize, learningRate);
+                    updateMiniBatch(data, j * miniBatchSize, miniBatchSize, learningRate, regulationLambda);
                 }
                 if (testData != null)
                 {
@@ -65,7 +66,7 @@ namespace SharpNet
                 }
             }
         }
-        private void updateMiniBatch(List<(double[] Image, byte Label)> data, int startIndex, int batchSize, double leariningRate)
+        private void updateMiniBatch(List<(double[] Image, byte Label)> data, int startIndex, int batchSize, double leariningRate, double regulationLambda)
         {
             (Vector<double> nabulaB, Matrix<double> nabulaW)[] layeredSigmas = new(Vector<double> nabulaB, Matrix<double> nabulaW)[mLayers.Length];
             for (int i = startIndex; i <= startIndex + batchSize -1; i++)
@@ -84,11 +85,13 @@ namespace SharpNet
                 }
             }
 
-           
+
+            var weightDecay = (1 - leariningRate * regulationLambda / data.Count());
+
             for (int l = mLayers.Length - 1; l >= 1; l--)
             {
                 mLayers[l].AdjustBias(leariningRate / batchSize * layeredSigmas[l].nabulaB);
-                mLayers[l].AdjustWeights(leariningRate / batchSize * layeredSigmas[l].nabulaW);
+                mLayers[l].AdjustWeights(leariningRate / batchSize * layeredSigmas[l].nabulaW, weightDecay);
             }
         }
         private (Vector<double>[] nabulaB, Matrix<double>[] nabulaW) backPropagation((double[] Image, byte Label) data)
@@ -180,7 +183,6 @@ namespace SharpNet
             var values = strContent.Split(';');
             string costFunction = values[0];
             int layerCount = int.Parse(values[1]);
-
             Layer[] layers = new Layer[layerCount];
             for (int i = 0; i < layers.Length; i++)
                 layers[i] = Layer.Load(reader);
