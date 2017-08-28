@@ -15,7 +15,7 @@ namespace SharpNet
         private Vector<double> mBias;
         private Matrix<double> mWeights;
         public Layer(int size, int sizeofPreviousLayer) : this(CreateVector.Random<double>(size, new Normal(0.0, 1.0)),
-                            sizeofPreviousLayer > 0 ? CreateMatrix.Random<double>(size, sizeofPreviousLayer, new Normal(0.0, 1.0)) : null)
+                            sizeofPreviousLayer > 0 ? CreateMatrix.Random<double>(size, sizeofPreviousLayer, new Normal(0.0, 1.0/ Math.Sqrt(sizeofPreviousLayer))) : null)
         {
         }
         public Layer(Vector<double> bias, Matrix<double> weights)
