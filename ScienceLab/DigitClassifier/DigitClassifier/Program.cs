@@ -14,14 +14,16 @@ namespace DigitClassifier
         static Random mRand = new Random();
         static void Main(string[] args)
         {
+            const string dataRoot = @"D:\Haishi-2017\Vault818-Local\MNIST";
+
             //Load training data
-            var trainingImages = MINSTDataLoader.LoadImages(@"C:\HaishiRooster\Data\MINST\train-images-idx3-ubyte.gz");
-            var trainingLabels = MINSTDataLoader.LoadLabels(@"C:\HaishiRooster\Data\MINST\train-labels-idx1-ubyte.gz");
+            var trainingImages = MINSTDataLoader.LoadImages(Path.Combine(dataRoot, "train-images-idx3-ubyte.gz"));
+            var trainingLabels = MINSTDataLoader.LoadLabels(Path.Combine(dataRoot, "train-labels-idx1-ubyte.gz"));
             var trainingSet = MINSTDataLoader.CombineImagesAndLabels(trainingImages, trainingLabels);
 
             //Load test data
-            var testingImages = MINSTDataLoader.LoadImages(@"C:\HaishiRooster\Data\MINST\t10k-images-idx3-ubyte.gz");
-            var testingLabels = MINSTDataLoader.LoadLabels(@"C:\HaishiRooster\Data\MINST\t10k-labels-idx1-ubyte.gz");
+            var testingImages = MINSTDataLoader.LoadImages(Path.Combine(dataRoot, "t10k-images-idx3-ubyte.gz"));
+            var testingLabels = MINSTDataLoader.LoadLabels(Path.Combine(dataRoot, "t10k-labels-idx1-ubyte.gz"));
             var testingSet = MINSTDataLoader.CombineImagesAndLabels(testingImages, testingLabels);
 
             //Print training set information and a sample image
@@ -55,7 +57,7 @@ namespace DigitClassifier
                 //Cross-entropy regulated
                 network = new Network(new CrossEntropyCost(), 784, 100, 10);
                 //Train the network
-                network.Train(trainingSet, 60, 10, 0.1, testingSet, 10, 5.0);
+                network.Train(trainingSet, 120, 10, 0.1, testingSet, 10, 5.0);
             }
 
             //Now validate

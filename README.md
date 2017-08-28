@@ -25,6 +25,7 @@ Diner is a relaxing environment where old and new ideas are causally shared. Thi
 
 ## Elevator
 There are always new ways to write programs. New programming languages and frameworks come and go, and they leave a bunch of "Hello, World!" programs in the elevator.
+- [**HelloWorld-Go**](./Elevator/HelloWorld-Go) Hello, World! from [Go](https://golang.org/). ![Go](./imgs/go.png)
 - [**HelloWorld-ProtoActor**](./Elevator/HelloWorld-ProtoActor) Hello, World! from [Proto Actor](http://proto.actor/). ![C# 7.0](./imgs/c-sharp-7.png) ![Proto Actor](./imgs/proto-actor.png)
  
 
