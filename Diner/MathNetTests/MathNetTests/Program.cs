@@ -26,6 +26,25 @@ namespace MathNetTests
             //Pointwise substraction
             Console.WriteLine(PointwiseSubstraction(vector, vector)); //Expected: [0,0,0]
             Console.WriteLine(PointwiseSubstraction(matrix, matrix)); //Expected: [0,0,0][0,0,0]
+
+            //Mask a row/column (but not clear it)
+            var uMatrix = CreateMatrix.Dense<double>(2, 3, 1.0);
+            uMatrix.ClearColumns(0, 2);
+            var cMatrix = CreateMatrix.Dense<double>(2, 3, 1.0);
+            cMatrix.ClearColumn(1);
+            //with 1st and 3rd columns masked
+            var newMatrix = matrix.PointwiseMultiply(uMatrix);
+            Console.WriteLine(newMatrix);
+            //original matrix
+            Console.WriteLine(matrix);
+            //update the newMatrix
+            newMatrix[0, 1] = 100;
+            newMatrix[1, 1] = 200;
+            Console.WriteLine(newMatrix);
+            //push new values back to original
+            matrix = matrix.PointwiseMultiply(cMatrix) + newMatrix.PointwiseMultiply(uMatrix);
+            Console.WriteLine(matrix);
+
         }
         static Vector<double> MatrixDotVector(Matrix<double> matrix, Vector<double> vector)
         {
