@@ -44,7 +44,6 @@ namespace MathNetTests
             //push new values back to original
             matrix = matrix.PointwiseMultiply(cMatrix) + newMatrix.PointwiseMultiply(uMatrix);
             Console.WriteLine(matrix);
-
         }
         static Vector<double> MatrixDotVector(Matrix<double> matrix, Vector<double> vector)
         {

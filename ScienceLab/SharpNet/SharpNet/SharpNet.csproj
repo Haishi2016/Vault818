@@ -34,6 +34,9 @@
     <Reference Include="MathNet.Numerics, Version=3.20.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\DigitClassifier\packages\MathNet.Numerics.3.20.0\lib\net40\MathNet.Numerics.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\DigitClassifier\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,12 +48,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CrossEntropyCost.cs" />
+    <Compile Include="HyperParameters.cs" />
     <Compile Include="ICostFunction.cs" />
     <Compile Include="Layer.cs" />
     <Compile Include="ListExtensions.cs" />
+    <Compile Include="MatrixMath.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuadraticCost.cs" />
+    <Compile Include="NetworkEventArgs.cs" />
     <Compile Include="VectorMath.cs" />
   </ItemGroup>
   <ItemGroup>

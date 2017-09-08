@@ -1,6 +1,7 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,65 +11,114 @@ namespace SharpNet
 {
     public class Network
     {
-        private Layer[] mLayers;
+        private Layer[] mLayers;        
+        private HyperParameters mParameters;
         private ICostFunction mCostFunction;
-        
 
-        public Network(string costFunctioName)
-        {
-            mCostFunction = new QuadraticCost();
-        }
-        public Network(double regulationLambda = 0.0, params int[] nodeCounts)
-            :this(new QuadraticCost(),  nodeCounts)
-        {
+        public event EventHandler<TrainingEventArgs> OnEpochStart;
+        public event EventHandler<TrainingEventArgs> OnEpochValidationStart;
+        public event EventHandler<TrainingEventArgs> OnEpochValidationEnd;
+        public event EventHandler<TrainingEventArgs> OnAutoSaveRequest;
+        public event EventHandler<TrainingEventArgs> OnMiniBatchStart;
+        public event EventHandler<TrainingEventArgs> OnMiniBatchEnd;
 
-        }
-        public Network(ICostFunction costFunction, params int[] nodeCounts)
+        public HyperParameters HyperParameters { get { return mParameters; } }
+
+        public Network(HyperParameters hyperParameters, params int[] nodeCounts)
         {
-            mCostFunction = costFunction;
+            mParameters = hyperParameters;
+            switch(mParameters.CostFunctionName)
+            {
+                case "QuadraticCost":
+                    mCostFunction = new QuadraticCost();
+                    break;
+                case "CrossEntropyCost":
+                    mCostFunction = new CrossEntropyCost();
+                    break;
+                default:
+                    throw new ArgumentException(string.Format("Invalid cost function name:'{0}'", mParameters.CostFunctionName));
+            }
             if (nodeCounts == null || nodeCounts.Length == 0)
-                throw new ArgumentNullException();
+                return;
             mLayers = new Layer[nodeCounts.Length];
             for (int i = 0; i < mLayers.Length; i++)
-                mLayers[i] = new Layer(nodeCounts[i], i==0?0: nodeCounts[i-1]);
+                mLayers[i] = new Layer(nodeCounts[i], i == 0 ? 0 : nodeCounts[i - 1]);
         }
+        
 
-        public void Train(List<(double[] Image, byte Label)> data, int epochs, int miniBatchSize, double learningRate, List<(double[] Image, byte Label)> testData = null, int testSize = 10, double regulationLambda = 0.0)
+        public void Train(List<(double[] Image, byte Label)> data, List<(double[] Image, byte Label)> testData = null)
         {
             if (data == null)
                 throw new ArgumentNullException();
+            
             int traingSetSize = data.Count;
-            if (miniBatchSize <= 0 || miniBatchSize > traingSetSize)
+            if (mParameters.MiniBatchSize <= 0 || mParameters.MiniBatchSize > traingSetSize)
                 throw new ArgumentException("Mini-batch size needs to a positive value smaller than training set size.");
 
-            for (int i = 0; i < epochs; i++)
+            for (int i = 0; i < mParameters.Epochs; i++)
             {
-                Console.WriteLine("Running training epoch " + i);
-                Console.WriteLine("   Training...");
+                if (this.OnEpochStart != null)
+                    this.OnEpochStart(this, new TrainingEventArgs(epoch:i));
                 data.Shuffle();
-                for (int j = 0; j < traingSetSize / miniBatchSize; j++)
+               
+                for (int j = 0; j < traingSetSize / mParameters.MiniBatchSize; j++)
                 {
-                    updateMiniBatch(data, j * miniBatchSize, miniBatchSize, learningRate, regulationLambda);
+                    if (this.OnMiniBatchStart != null)
+                        this.OnMiniBatchStart(this, new TrainingEventArgs(dataSize: traingSetSize, batchSize: mParameters.MiniBatchSize, sample: j));
+                    updateMiniBatch(data, j * mParameters.MiniBatchSize, mParameters.MiniBatchSize, mParameters.LearningRate, mParameters.RegulationLambda, mParameters.UseDropouts);
+                }
+                if (this.OnMiniBatchEnd != null)
+                    this.OnMiniBatchEnd(this, new TrainingEventArgs());
+                if (mParameters.UseDropouts)
+                {
+                    for (int k = 1; k < mLayers.Length; k++)
+                    {
+                        mLayers[k].ClearMasks();
+                    }
                 }
                 if (testData != null)
                 {
-                    Console.WriteLine("   Validating " + testSize + " test pictures...");
+                    if (this.OnEpochValidationStart != null)
+                        this.OnEpochValidationStart(this, new TrainingEventArgs(testSize:mParameters.TestSize));
                     int count = 0;
                     Random rand = new Random();
-                    int startIndex = rand.Next(0, testData.Count - testSize + 1);
-                    for (int v = 0; v < testSize; v++)
+                    int startIndex = rand.Next(0, testData.Count - mParameters.TestSize + 1);
+                    for (int v = 0; v < mParameters.TestSize; v++)
                     {
-                        var detection = this.Detect(CreateVector.Dense<double>(testData[v+startIndex].Image));
-                        if (detection == testData[v+startIndex].Label)
+                        var detection = this.Detect(CreateVector.Dense<double>(testData[v + startIndex].Image));
+                        if (detection == testData[v + startIndex].Label)
                             count++;
                     }
-                    Console.WriteLine("   Detected {0} out of {1} pictures, correct rate is: {2:0.0%}", count, testSize, count * 1.0 / testSize);
+                    var detectionRate = count * 1.0 / mParameters.TestSize;
+                    if (this.OnEpochValidationEnd != null)
+                        OnEpochValidationEnd(this, new TrainingEventArgs(testSize: mParameters.TestSize, dataSize:count, detectionRate: detectionRate));
+
+                    if (mParameters.AutoSave && detectionRate >= mParameters.AutoSaveThreshold && this.OnAutoSaveRequest != null)
+                        this.OnAutoSaveRequest(this, new TrainingEventArgs(epoch:i, detectionRate: detectionRate));
                 }
             }
         }
-        private void updateMiniBatch(List<(double[] Image, byte Label)> data, int startIndex, int batchSize, double leariningRate, double regulationLambda)
+        private void updateMiniBatch(List<(double[] Image, byte Label)> data, int startIndex, int batchSize, double leariningRate, double regulationLambda, bool useDropout)
         {
             (Vector<double> nabulaB, Matrix<double> nabulaW)[] layeredSigmas = new(Vector<double> nabulaB, Matrix<double> nabulaW)[mLayers.Length];
+
+            //doesn't support dropouts in multiple hidden layers yet
+            if (useDropout)
+            {
+                bool vertical = false;
+                int[] mask = MatrixMath.PickHalfElements(mLayers[1].Weights.RowCount);
+                for (int i = 1; i < mLayers.Length; i++)
+                {
+                    mLayers[i].SetMasks(mask, vertical);
+                    vertical = !vertical;
+                }
+            }
+            else
+            {
+                for (int i = 1; i < mLayers.Length; i++)
+                    mLayers[i].ClearMasks();
+            }
+                
             for (int i = startIndex; i <= startIndex + batchSize -1; i++)
             {
                 var result = backPropagation(data[i]);
@@ -132,16 +182,16 @@ namespace SharpNet
             return (nablaB, nablaW);
         }
         
-        public Vector<double> FeedForward(Vector<double> input)
+        public Vector<double> FeedForward(Vector<double> input, bool useDropouts = false)
         {
             for (int i = 0; i < mLayers.Length; i++)
-                input = mLayers[i].FeedForward(input).activation;
+                input = mLayers[i].FeedForward(input, useDropouts).activation;
             return input;
         }
 
         public byte Detect(Vector<double> input)
         {
-            var result = this.FeedForward(input);
+            var result = this.FeedForward(input, mParameters.UseDropouts);
             double max = double.MinValue;
             byte index = byte.MaxValue;
             for (byte i = 0; i <result.Count; i++)
@@ -180,23 +230,23 @@ namespace SharpNet
         public static Network Load(StreamReader reader)
         {
             var strContent = reader.ReadLine();
-            var values = strContent.Split(';');
-            string costFunction = values[0];
-            int layerCount = int.Parse(values[1]);
+            var hyperParameters = HyperParameters.Deserialize(strContent);
+            int layerCount = int.Parse(reader.ReadLine());
             Layer[] layers = new Layer[layerCount];
             for (int i = 0; i < layers.Length; i++)
                 layers[i] = Layer.Load(reader);
 
-            Network network = new Network(costFunction);
+            Network network = new Network(hyperParameters);
             network.LoadLayers(layers);
             return network;
         }
 
         public void Save(StreamWriter writer)
         {
-            writer.WriteLine(mCostFunction.GetType().Name + ";" + mLayers.Length);
+            writer.WriteLine(mParameters.Serialize());
+            writer.WriteLine(mLayers.Length);
             for (int i = 0; i < mLayers.Length; i++)
-                mLayers[i].Save(writer);
+                mLayers[i].Save(writer, mParameters.UseDropouts);
         }
 
         public void LoadLayers(Layer[] layers)
