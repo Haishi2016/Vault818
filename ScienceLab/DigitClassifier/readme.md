@@ -19,12 +19,12 @@ This project is written with .Net Framework 4.7 using Visual Studio 2017.
 
 There are few trained models under the **trained** folder:
 
-| File | Accuracy | Cost Function | Learning Rate | Regularization | Epoch |
-|------|----------|---------------|---------------|----------------|-------|
-| quadratic-9640.txt| 96.40% | quadratic | 3.0 | 0.0 | 30 |
-| crossentropy-9710.txt | 97.10% | cross-entropy | 0.5 | 0.0 | 30 |
-| crossentropy-regulated-9780.txt | 97.80% | cross-entropy | 0.1 | 5.0 | 60 |
-| crossentropy-regulated-9820.txt | 98.20% | cross-entropy | 0.1 | 5.0 | 120 |
+| File | Accuracy | Cost Function | Learning Rate | Regularization | Epoch | Hidden Layer Size |
+|------|----------|---------------|---------------|----------------|-------|-------------------|
+| quadratic-9640.txt| 96.40% | quadratic | 3.0 | 0.0 | 30 | 30 |
+| crossentropy-9800.txt | 98.00% | cross-entropy | 0.5 | 0.0 | 30 | 100 |
+| crossentropy-regulated-9780.txt | 97.80% | cross-entropy | 0.1 | 5.0 | 60 | 100 |
+| crossentropy-regulated-9820.txt | 98.20% | cross-entropy | 0.1 | 5.0 | 120 | 100 |
 
 To use a pre-trained model, pass the file name to **DigitalClassifier** as a parameter:
 

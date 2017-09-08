@@ -50,10 +50,10 @@ namespace DigitClassifier
             {
                 ////MSR
                 //HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "QuadraticCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 3, TestSize = 10, AutoSave = true, AutoSaveThreshold = 0.951 };
+                //network = new Network(hyperParameters, 784, 30, 10);
                 ////Cross-entropy
-                HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 0.08, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.967 };
-
-                network = new Network(hyperParameters, 784, 30, 10);
+                HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 0.5, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.967 };
+                network = new Network(hyperParameters, 784, 100, 10);
 
                 hookupEvents(network);
                 dumpHyperParameters(hyperParameters);
@@ -90,7 +90,7 @@ namespace DigitClassifier
                         for (int i = 0; i < testingSet.Count; i++)
                         {
                             var detection = network.Detect(testingSet[i].Image);
-                            if (detection == testingSet[i].Label)
+                            if (convertToByte(detection) == convertToByte(testingSet[i].Label))
                             {
                                 Console.Write(".");
                                 count++;
