@@ -51,7 +51,7 @@ namespace DigitClassifier
                 ////MSR
                 //HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "QuadraticCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 3, TestSize = 10, AutoSave = true, AutoSaveThreshold = 0.951 };
                 ////Cross-entropy
-                HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 0.06, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.967 };
+                HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 0.08, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.967 };
 
                 network = new Network(hyperParameters, 784, 30, 10);
 
