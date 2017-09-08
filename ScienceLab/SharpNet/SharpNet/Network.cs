@@ -46,7 +46,7 @@ namespace SharpNet
         }
         
 
-        public void Train(List<(double[] Image, byte Label)> data, List<(double[] Image, byte Label)> testData = null)
+        public void Train(List<(double[] Image, Vector<double> Label)> data, Func<Vector<double>, Vector<double>, bool> areEqual, List<(double[] Image, Vector<double> Label)> testData = null)
         {
             if (data == null)
                 throw new ArgumentNullException();
@@ -86,7 +86,7 @@ namespace SharpNet
                     for (int v = 0; v < mParameters.TestSize; v++)
                     {
                         var detection = this.Detect(CreateVector.Dense<double>(testData[v + startIndex].Image));
-                        if (detection == testData[v + startIndex].Label)
+                        if (areEqual(detection, testData[v + startIndex].Label))
                             count++;
                     }
                     var detectionRate = count * 1.0 / mParameters.TestSize;
@@ -98,7 +98,7 @@ namespace SharpNet
                 }
             }
         }
-        private void updateMiniBatch(List<(double[] Image, byte Label)> data, int startIndex, int batchSize, double leariningRate, double regulationLambda, bool useDropout)
+        private void updateMiniBatch(List<(double[] Image, Vector<double> Label)> data, int startIndex, int batchSize, double leariningRate, double regulationLambda, bool useDropout)
         {
             (Vector<double> nabulaB, Matrix<double> nabulaW)[] layeredSigmas = new(Vector<double> nabulaB, Matrix<double> nabulaW)[mLayers.Length];
 
@@ -144,7 +144,7 @@ namespace SharpNet
                 mLayers[l].AdjustWeights(leariningRate / batchSize * layeredSigmas[l].nabulaW, weightDecay);
             }
         }
-        private (Vector<double>[] nabulaB, Matrix<double>[] nabulaW) backPropagation((double[] Image, byte Label) data)
+        private (Vector<double>[] nabulaB, Matrix<double>[] nabulaW) backPropagation((double[] Image, Vector<double> Label) data)
         {
             int layerCount = mLayers.Length;
             Vector<double>[] nablaB = new Vector<double>[layerCount];
@@ -162,8 +162,7 @@ namespace SharpNet
             }
 
             //Output error
-            var expected = toResultVector(data.Label);
-            var error = mCostFunction.Delta(activations[layerCount-1], expected, weightedInputs[layerCount - 1]);
+            var error = mCostFunction.Delta(activations[layerCount-1], data.Label, weightedInputs[layerCount - 1]);
 
             
             nablaB[layerCount - 1] = error;
@@ -189,44 +188,15 @@ namespace SharpNet
             return input;
         }
 
-        public byte Detect(Vector<double> input)
+        public Vector<double> Detect(Vector<double> input)
         {
-            var result = this.FeedForward(input, mParameters.UseDropouts);
-            double max = double.MinValue;
-            byte index = byte.MaxValue;
-            for (byte i = 0; i <result.Count; i++)
-            {
-                if (result[i] >= max)
-                {
-                    max = result[i];
-                    index = i;
-                }
-            }
-            return index;
+            return this.FeedForward(input, mParameters.UseDropouts);
         }
         private Vector<double> costDerivative(Vector<double> activations, Vector<double> expected)
         {
             return activations - expected;
         }
 
-        private Vector<double> toResultVector(byte label)
-        {
-            return CreateVector.DenseOfArray<double>(
-                new double[]
-                {
-                    label == 0? 1.0:0.0,
-                    label == 1? 1.0:0.0,
-                    label == 2? 1.0:0.0,
-                    label == 3? 1.0:0.0,
-                    label == 4? 1.0:0.0,
-                    label == 5? 1.0:0.0,
-                    label == 6? 1.0:0.0,
-                    label == 7? 1.0:0.0,
-                    label == 8? 1.0:0.0,
-                    label == 9? 1.0:0.0
-                }
-                );
-        }
         public static Network Load(StreamReader reader)
         {
             var strContent = reader.ReadLine();

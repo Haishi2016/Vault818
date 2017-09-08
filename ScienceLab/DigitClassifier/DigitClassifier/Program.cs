@@ -16,7 +16,7 @@ namespace DigitClassifier
         static int left = 0, top = 0;
         static void Main(string[] args)
         {
-            const string dataRoot = @"D:\Haishi-2017\Vault818-Local\MNIST";
+            const string dataRoot = @"C:\HaishiRooster\Data\MINST";
 
             //Load training data
             var trainingImages = MINSTDataLoader.LoadImages(Path.Combine(dataRoot, "train-images-idx3-ubyte.gz"));
@@ -32,7 +32,7 @@ namespace DigitClassifier
             Console.WriteLine("Training set size: " + trainingSet.Count);
             Console.WriteLine("Testing set size: " + testingSet.Count);
             int index = mRand.Next(trainingSet.Count);
-            Console.WriteLine(string.Format("Here's a random picture from the training set: #{0} ({1})", index, trainingSet[index].Label));
+            Console.WriteLine(string.Format("Here's a random picture from the training set: #{0} ({1})", index, convertToByte(trainingSet[index].Label)));
             MINSTDataVisualizer.PrintImage(trainingSet[index].Image, 28);
 
             Network network;
@@ -51,7 +51,7 @@ namespace DigitClassifier
                 ////MSR
                 //HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "QuadraticCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 3, TestSize = 10, AutoSave = true, AutoSaveThreshold = 0.951 };
                 ////Cross-entropy
-                HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 1, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.971 };
+                HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 0.08, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.971 };
 
                 network = new Network(hyperParameters, 784, 30, 10);
 
@@ -59,7 +59,10 @@ namespace DigitClassifier
                 dumpHyperParameters(hyperParameters);
 
                 //Train the network
-                network.Train(trainingSet, testingSet);
+                network.Train(trainingSet, (actual, expected)=>
+                {
+                    return convertToByte(actual) == convertToByte(expected);
+                }, testingSet);
 
                 ////Cross-entropy regulated
                 //network = new Network(new CrossEntropyCost(), 784, 100, 10);
@@ -99,10 +102,10 @@ namespace DigitClassifier
                     }
                     else if (index >= 0 && index < testingSet.Count)
                     {
-                        Console.WriteLine(string.Format("Test image: #{0} ({1})", index, testingSet[index].Label));
+                        Console.WriteLine(string.Format("Test image: #{0} ({1})", index, convertToByte(testingSet[index].Label)));
                         MINSTDataVisualizer.PrintImage(testingSet[index].Image, 28);
                         var detection = network.Detect(CreateVector.Dense<double>(testingSet[index].Image));
-                        Console.WriteLine(string.Format("\nDetected number: {0} - {1}", detection, detection == testingSet[index].Label ? "SUCCESS!" : "FAIL!"));
+                        Console.WriteLine(string.Format("\nDetected number: {0} - {1}", detection, convertToByte(detection) == convertToByte(testingSet[index].Label) ? "SUCCESS!" : "FAIL!"));
                     }
                     else if (index == -2)
                         break;
@@ -117,6 +120,20 @@ namespace DigitClassifier
                     }
                 }
             }
+        }
+        private static byte convertToByte(Vector<double> result)
+        {
+            double max = double.MinValue;
+            byte index = byte.MaxValue;
+            for (byte i = 0; i <result.Count; i++)
+            {
+                if (result[i] >= max)
+                {
+                    max = result[i];
+                    index = i;
+                }
+            }
+            return index;
         }
 
         private static void hookupEvents(Network network)

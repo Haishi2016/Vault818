@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathNet.Numerics.LinearAlgebra;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -65,7 +66,7 @@ namespace DigitClassifier
         /// </summary>
         /// <param name="labelFile"></param>
         /// <returns></returns>
-        public static List<byte> LoadLabels(string labelFile)
+        public static List<Vector<double>> LoadLabels(string labelFile)
         {
             if (!File.Exists(labelFile))
                 throw new FileNotFoundException();
@@ -84,15 +85,33 @@ namespace DigitClassifier
                     }
                 }
             }
-            return ret;
+            List<Vector<double>> vectors = new List<Vector<double>>();
+            foreach (var label in ret)
+            {
+                vectors.Add(CreateVector.DenseOfArray<double>(
+                        new double[]
+                        {
+                            label == 0? 1.0:0.0,
+                            label == 1? 1.0:0.0,
+                            label == 2? 1.0:0.0,
+                            label == 3? 1.0:0.0,
+                            label == 4? 1.0:0.0,
+                            label == 5? 1.0:0.0,
+                            label == 6? 1.0:0.0,
+                            label == 7? 1.0:0.0,
+                            label == 8? 1.0:0.0,
+                            label == 9? 1.0:0.0
+                        }));
+            }
+            return vectors;
         }
-        public static List<(double[] Image,byte Label)> CombineImagesAndLabels(List<byte[]> images, List<byte> labels)
+        public static List<(double[] Image,Vector<double> Label)> CombineImagesAndLabels(List<byte[]> images, List<Vector<double>> labels)
         {
             if (images == null | labels == null)
                 throw new ArgumentNullException();
             if (images.Count != labels.Count)
                 throw new ArgumentException("List lengths don't match.");
-            List<(double[], byte)> ret = new List<(double[], byte)>();
+            List<(double[], Vector<double>)> ret = new List<(double[], Vector<double>)>();
             for (int i = 0; i < images.Count; i++)
                 ret.Add((MINSTDataLoader.Normalize(images[i]), labels[i]));
             return ret;

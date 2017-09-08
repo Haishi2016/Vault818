@@ -44,6 +44,14 @@ namespace MathNetTests
             //push new values back to original
             matrix = matrix.PointwiseMultiply(cMatrix) + newMatrix.PointwiseMultiply(uMatrix);
             Console.WriteLine(matrix);
+
+            //Vector equality
+            Vector<double> a1 = CreateVector.DenseOfArray<double>(new double[]{ 1.2, 3.4, 5.6});
+            Vector<double> a2 = CreateVector.DenseOfArray<double>(new double[] { 12, 34, 56 });
+            Console.WriteLine(a1 == a2);
+            Console.WriteLine(a1.Equals(a2));
+            Console.WriteLine(a1.Normalize(1));
+            Console.WriteLine(a1.Normalize(1).Equals(a2));
         }
         static Vector<double> MatrixDotVector(Matrix<double> matrix, Vector<double> vector)
         {
