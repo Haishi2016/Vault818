@@ -51,7 +51,7 @@ namespace DigitClassifier
                 ////MSR
                 //HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "QuadraticCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 3, TestSize = 10, AutoSave = true, AutoSaveThreshold = 0.951 };
                 ////Cross-entropy
-                HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 0.08, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.971 };
+                HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 0.06, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.967 };
 
                 network = new Network(hyperParameters, 784, 30, 10);
 
@@ -89,7 +89,7 @@ namespace DigitClassifier
                         Console.Write(string.Format("Detecting {0} pictures", testingSet.Count));
                         for (int i = 0; i < testingSet.Count; i++)
                         {
-                            var detection = network.Detect(CreateVector.Dense<double>(testingSet[i].Image));
+                            var detection = network.Detect(testingSet[i].Image);
                             if (detection == testingSet[i].Label)
                             {
                                 Console.Write(".");
@@ -104,7 +104,7 @@ namespace DigitClassifier
                     {
                         Console.WriteLine(string.Format("Test image: #{0} ({1})", index, convertToByte(testingSet[index].Label)));
                         MINSTDataVisualizer.PrintImage(testingSet[index].Image, 28);
-                        var detection = network.Detect(CreateVector.Dense<double>(testingSet[index].Image));
+                        var detection = network.Detect(testingSet[index].Image);
                         Console.WriteLine(string.Format("\nDetected number: {0} - {1}", detection, convertToByte(detection) == convertToByte(testingSet[index].Label) ? "SUCCESS!" : "FAIL!"));
                     }
                     else if (index == -2)

@@ -46,7 +46,7 @@ namespace SharpNet
         }
         
 
-        public void Train(List<(double[] Image, Vector<double> Label)> data, Func<Vector<double>, Vector<double>, bool> areEqual, List<(double[] Image, Vector<double> Label)> testData = null)
+        public void Train(List<(Vector<double> Image, Vector<double> Label)> data, Func<Vector<double>, Vector<double>, bool> areEqual, List<(Vector<double> Image, Vector<double> Label)> testData = null)
         {
             if (data == null)
                 throw new ArgumentNullException();
@@ -85,7 +85,7 @@ namespace SharpNet
                     int startIndex = rand.Next(0, testData.Count - mParameters.TestSize + 1);
                     for (int v = 0; v < mParameters.TestSize; v++)
                     {
-                        var detection = this.Detect(CreateVector.Dense<double>(testData[v + startIndex].Image));
+                        var detection = this.Detect(testData[v + startIndex].Image);
                         if (areEqual(detection, testData[v + startIndex].Label))
                             count++;
                     }
@@ -98,7 +98,7 @@ namespace SharpNet
                 }
             }
         }
-        private void updateMiniBatch(List<(double[] Image, Vector<double> Label)> data, int startIndex, int batchSize, double leariningRate, double regulationLambda, bool useDropout)
+        private void updateMiniBatch(List<(Vector<double> Image, Vector<double> Label)> data, int startIndex, int batchSize, double leariningRate, double regulationLambda, bool useDropout)
         {
             (Vector<double> nabulaB, Matrix<double> nabulaW)[] layeredSigmas = new(Vector<double> nabulaB, Matrix<double> nabulaW)[mLayers.Length];
 
@@ -144,7 +144,7 @@ namespace SharpNet
                 mLayers[l].AdjustWeights(leariningRate / batchSize * layeredSigmas[l].nabulaW, weightDecay);
             }
         }
-        private (Vector<double>[] nabulaB, Matrix<double>[] nabulaW) backPropagation((double[] Image, Vector<double> Label) data)
+        private (Vector<double>[] nabulaB, Matrix<double>[] nabulaW) backPropagation((Vector<double> Image, Vector<double> Label) data)
         {
             int layerCount = mLayers.Length;
             Vector<double>[] nablaB = new Vector<double>[layerCount];

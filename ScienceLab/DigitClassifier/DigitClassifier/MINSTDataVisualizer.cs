@@ -9,9 +9,9 @@ namespace DigitClassifier
     public class MINSTDataVisualizer
     {
         private const string GrayScale = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`\'. ";
-        public static void PrintImage(double[] image, int row)
+        public static void PrintImage(MathNet.Numerics.LinearAlgebra.Vector<double> image, int row)
         {
-            int column = image.Length / row;
+            int column = image.Count / row;
             for (int y = 0; y < row; y++)
             {
                 for (int x = 0; x < column; x++)

@@ -67,6 +67,7 @@ Science Lab is the home of AI and ML focused projects.
 
 - [**DigitClassifier**](./ScienceLab/DigitClassifier) implements a simple neural network that recognizes handwritten digits. ![C# 7.0](./imgs/c-sharp-7.png) ![ML](./imgs/ml.png)
 - [**SharpNet**](./ScienceLab/SharpNet) a simple neural netowrk implemented in C#. ![C# 7.0](./imgs/c-sharp-7.png) ![ML](./imgs/ml.png)
+- [**TicTacToe**](./ScienceLab/TicTacToe) a Hello-world neural network using SharpNet that learns how to play Tic-Tac-Toe. ![C# 7.0](./imgs/c-sharp-7.png) ![ML](./imgs/ml.png)
 ## Storage Room
 [EMPTY]
 

@@ -17,23 +17,24 @@ namespace TicTacToe
             Network network = new Network(new HyperParameters
             {
                  CostFunctionName = "CrossEntropyCost",
-                 Epochs = 100,
+                 Epochs = 100, //try 500, 20000
                  MiniBatchSize = 3,
                  LearningRate = 1,
                  TestSize = 3
             }, 3, 3, 3);
 
             //Our training set is very small - basically it encodes the rock-paper-scissors rules: if paper, then scissors and so on.
-            List<(double[], Vector<double>)> data = new List<(double[], Vector<double>)>
+            List<(Vector<double>, Vector<double>)> data = new List<(Vector<double>, Vector<double>)>
             {
                 //rock, paper, scissors
-                (new double[]{1,0,0}, CreateVector.DenseOfArray<double>(new double[]{0,1,0})),
-                (new double[]{0,1,0}, CreateVector.DenseOfArray<double>(new double[]{0,0,1})),
-                (new double[]{0,0,1}, CreateVector.DenseOfArray<double>(new double[]{1,0,0})),
+                (makeRock(), makePaper()),
+                (makePaper(), makeScissors()),
+                (makeScissors(), makeRock()),
             };
 
             //Before Training
             Console.WriteLine("Before training");
+            Console.WriteLine("===============\n");
             test(network);
 
             Console.WriteLine();
@@ -42,12 +43,15 @@ namespace TicTacToe
             network.Train(data, null);
 
             Console.WriteLine("After training");
+            Console.WriteLine("==============\n");
             test(network);
+
+            Console.WriteLine();
         }
         static string convertToName(Vector<double> result)
         {
             if (result[0] >= result[1] && result[0] >= result[2])
-                return "Rocks   ";
+                return "Rock    ";
             else if (result[2] >= result[1] && result[0] <= result[2])
                 return "Scissors";
             else

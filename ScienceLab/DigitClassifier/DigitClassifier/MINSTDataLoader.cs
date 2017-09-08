@@ -105,24 +105,24 @@ namespace DigitClassifier
             }
             return vectors;
         }
-        public static List<(double[] Image,Vector<double> Label)> CombineImagesAndLabels(List<byte[]> images, List<Vector<double>> labels)
+        public static List<(Vector<double> Image,Vector<double> Label)> CombineImagesAndLabels(List<byte[]> images, List<Vector<double>> labels)
         {
             if (images == null | labels == null)
                 throw new ArgumentNullException();
             if (images.Count != labels.Count)
                 throw new ArgumentException("List lengths don't match.");
-            List<(double[], Vector<double>)> ret = new List<(double[], Vector<double>)>();
+            List<(Vector<double>, Vector<double>)> ret = new List<(Vector<double>, Vector<double>)>();
             for (int i = 0; i < images.Count; i++)
                 ret.Add((MINSTDataLoader.Normalize(images[i]), labels[i]));
             return ret;
         }
 
-        public static double[] Normalize(byte[] data)
+        public static Vector<double> Normalize(byte[] data)
         {
             double[] ret = new double[data.Length];
             for (int i = 0; i < ret.Length; i++)
                 ret[i] = data[i] / 255.0;
-            return ret;
+            return CreateVector.DenseOfArray<double>(ret);
         }
     }
 }
