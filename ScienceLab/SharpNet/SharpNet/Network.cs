@@ -44,7 +44,21 @@ namespace SharpNet
             for (int i = 0; i < mLayers.Length; i++)
                 mLayers[i] = new Layer(nodeCounts[i], i == 0 ? 0 : nodeCounts[i - 1]);
         }
-        
+        public void Reset()
+        {
+            for (int i = 0; i < mLayers.Length; i++)
+                mLayers[i].Reset();
+        }
+
+        public void Train(HyperParameters parameters, List<(Vector<double> Image, Vector<double> Label)> data, Func<Vector<double>, Vector<double>, bool> areEqual, List<(Vector<double> Image, Vector<double> Label)> testData = null)
+        {
+            if (parameters.MiniBatchSize > 0)
+                mParameters.MiniBatchSize = parameters.MiniBatchSize;
+            if (parameters.Epochs > 0)
+                mParameters.Epochs = parameters.Epochs;
+
+            this.Train(data, areEqual, testData);
+        }
 
         public void Train(List<(Vector<double> Image, Vector<double> Label)> data, Func<Vector<double>, Vector<double>, bool> areEqual, List<(Vector<double> Image, Vector<double> Label)> testData = null)
         {

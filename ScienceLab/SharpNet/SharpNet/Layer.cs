@@ -27,6 +27,12 @@ namespace SharpNet
             mBias = bias;
             mWeights = weights;
         }
+        public void Reset()
+        {
+            mBias = CreateVector.Random<double>(mBias.Count, new Normal(0.0, 1.0));
+            if (mWeights != null)
+                mWeights = CreateMatrix.Random<double>(mWeights.RowCount, mWeights.ColumnCount, new Normal(0.0, 1.0 / Math.Sqrt(mWeights.ColumnCount)));
+        }
         public void SetMasks(int[] mask, bool selCols)
         {
             if (mWeights != null)

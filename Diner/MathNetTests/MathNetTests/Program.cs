@@ -47,11 +47,14 @@ namespace MathNetTests
 
             //Vector equality
             Vector<double> a1 = CreateVector.DenseOfArray<double>(new double[]{ 1.2, 3.4, 5.6});
-            Vector<double> a2 = CreateVector.DenseOfArray<double>(new double[] { 12, 34, 56 });
+            Vector<double> a2 = CreateVector.DenseOfArray<double>(new double[] { 1.2, 3.4, 5.6 });
             Console.WriteLine(a1 == a2);
             Console.WriteLine(a1.Equals(a2));
-            Console.WriteLine(a1.Normalize(1));
-            Console.WriteLine(a1.Normalize(1).Equals(a2));
+
+            //Find biggest element in vector
+            Vector<double> c = CreateVector.DenseOfArray<double>(new double[] { 1.2, 3.4, 5.6 });
+            Console.WriteLine(c.MaximumIndex());
+            
         }
         static Vector<double> MatrixDotVector(Matrix<double> matrix, Vector<double> vector)
         {
