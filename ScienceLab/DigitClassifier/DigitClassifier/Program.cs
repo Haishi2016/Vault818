@@ -51,8 +51,17 @@ namespace DigitClassifier
                 ////MSR
                 //HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "QuadraticCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 3, TestSize = 10, AutoSave = true, AutoSaveThreshold = 0.951 };
                 //network = new Network(hyperParameters, 784, 30, 10);
+
                 ////Cross-entropy
-                HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 0.5, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.967 };
+                //HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 0.5, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.967 };
+                //network = new Network(hyperParameters, 784, 100, 10);
+                
+                ////Cross-entropy with regulation
+                //HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 60, MiniBatchSize = 10, LearningRate = 0.1,  RegulationLambda = 5.0, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.98 };
+                //network = new Network(hyperParameters, 784, 100, 10);
+                
+                ////Cross-entropy with regulation - 120 epochs
+                HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 120, MiniBatchSize = 10, LearningRate = 0.1,  RegulationLambda = 5.0, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.98 };
                 network = new Network(hyperParameters, 784, 100, 10);
 
                 hookupEvents(network);
