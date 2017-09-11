@@ -20,7 +20,9 @@ namespace SharpNet
         public event EventHandler<TrainingEventArgs> OnEpochValidationEnd;
         public event EventHandler<TrainingEventArgs> OnAutoSaveRequest;
         public event EventHandler<TrainingEventArgs> OnMiniBatchStart;
-        public event EventHandler<TrainingEventArgs> OnMiniBatchEnd;
+        public event EventHandler<TrainingEventArgs> OnEpochEnd;
+        public event EventHandler<NetworkInsightEventArgs> OnSampleProcessed;
+        public event EventHandler<NetworkInsightEventArgs> OnMiniBatchProcessed;
 
         public HyperParameters HyperParameters { get { return mParameters; } }
 
@@ -80,14 +82,16 @@ namespace SharpNet
                     if (this.OnMiniBatchStart != null)
                         this.OnMiniBatchStart(this, new TrainingEventArgs(dataSize: traingSetSize, batchSize: mParameters.MiniBatchSize, sample: j));
                     updateMiniBatch(data, j * mParameters.MiniBatchSize, mParameters.MiniBatchSize, mParameters.LearningRate, mParameters.RegulationLambda, mParameters.UseDropouts);
+                    if (this.OnMiniBatchProcessed != null)
+                        this.OnMiniBatchProcessed(this, makeInsightEvent());
                 }
-                if (this.OnMiniBatchEnd != null)
-                    this.OnMiniBatchEnd(this, new TrainingEventArgs());
+                if (this.OnEpochEnd != null)
+                    this.OnEpochEnd(this, new TrainingEventArgs());
                 if (mParameters.UseDropouts)
                 {
                     for (int k = 1; k < mLayers.Length; k++)
                     {
-                        mLayers[k].ClearMasks();
+                        mLayers[k].UseDropouts = false;
                     }
                 }
                 if (testData != null)
@@ -117,24 +121,34 @@ namespace SharpNet
             (Vector<double> nabulaB, Matrix<double> nabulaW)[] layeredSigmas = new(Vector<double> nabulaB, Matrix<double> nabulaW)[mLayers.Length];
 
             //doesn't support dropouts in multiple hidden layers yet
-            if (useDropout)
-            {
-                bool vertical = false;
-                int[] mask = MatrixMath.PickHalfElements(mLayers[1].Weights.RowCount);
-                for (int i = 1; i < mLayers.Length; i++)
-                {
-                    mLayers[i].SetMasks(mask, vertical);
-                    vertical = !vertical;
-                }
-            }
-            else
-            {
-                for (int i = 1; i < mLayers.Length; i++)
-                    mLayers[i].ClearMasks();
-            }
+            //if (useDropout)
+            //{
+            //    bool vertical = false;
+            //    int[] mask = MatrixMath.PickHalfElements(mLayers[1].Weights.RowCount);
+            //    for (int i = 1; i < mLayers.Length; i++)
+            //    {
+            //        mLayers[i].SetMasks(mask, vertical);
+            //        vertical = !vertical;
+            //    }
+            //}
+            //else
+            //{
+            //    for (int i = 1; i < mLayers.Length; i++)
+            //        mLayers[i].ClearMasks();
+            //}
                 
             for (int i = startIndex; i <= startIndex + batchSize -1; i++)
             {
+                if (useDropout)
+                {
+                    for (int j = 0; j < mLayers.Length-1; j++)
+                        mLayers[j].SetMasks(j==0? 1:0.5);
+                }
+                else
+                {
+                    for (int j = 0; j < mLayers.Length; j++)
+                        mLayers[j].UseDropouts = false;
+                }
                 var result = backPropagation(data[i]);
                 for (int l = 1;  l < mLayers.Length; l++)
                 {
@@ -147,6 +161,8 @@ namespace SharpNet
                     else
                         layeredSigmas[l].nabulaW = layeredSigmas[l].nabulaW + result.nabulaW[l];
                 }
+                if (this.OnSampleProcessed != null)
+                    this.OnSampleProcessed(this, makeInsightEvent());
             }
 
 
@@ -158,6 +174,19 @@ namespace SharpNet
                 mLayers[l].AdjustWeights(leariningRate / batchSize * layeredSigmas[l].nabulaW, weightDecay);
             }
         }
+
+        private NetworkInsightEventArgs makeInsightEvent()
+        {
+            List<Matrix<double>> weightList = new List<Matrix<double>>();
+            List<Vector<double>> biasList = new List<Vector<double>>();
+            for (int i = 0; i < mLayers.Length; i++)
+            {
+                weightList.Add(mLayers[i].Weights);
+                biasList.Add(mLayers[i].Bias);
+            }
+            return new NetworkInsightEventArgs(biasList, weightList);
+        }
+
         private (Vector<double>[] nabulaB, Matrix<double>[] nabulaW) backPropagation((Vector<double> Image, Vector<double> Label) data)
         {
             int layerCount = mLayers.Length;
@@ -172,12 +201,11 @@ namespace SharpNet
             {
                 var result = mLayers[i].FeedForward(activations[i-1]);
                 activations[i] = result.activation.Clone();
-                weightedInputs[i] = result.weightedInput.Clone();
+                weightedInputs[i] = result.weightedInput.Clone();             
             }
 
             //Output error
             var error = mCostFunction.Delta(activations[layerCount-1], data.Label, weightedInputs[layerCount - 1]);
-
             
             nablaB[layerCount - 1] = error;
             nablaW[layerCount - 1] = error.ToColumnMatrix() * activations[layerCount - 2].ToRowMatrix();
@@ -185,7 +213,7 @@ namespace SharpNet
             //Backpropagate the error
             for (int i = mLayers.Length-2; i >=1; i--)
             {
-                var z = weightedInputs[i];
+                Vector<double> z = weightedInputs[i];
                 var sp = VectorMath.SigmoidPrime(z);
                 error = (mLayers[i + 1].Weights.Transpose() * error).PointwiseMultiply(sp);
                 nablaB[i] = error;
@@ -195,16 +223,16 @@ namespace SharpNet
             return (nablaB, nablaW);
         }
         
-        public Vector<double> FeedForward(Vector<double> input, bool useDropouts = false)
+        public Vector<double> FeedForward(Vector<double> input)
         {
             for (int i = 0; i < mLayers.Length; i++)
-                input = mLayers[i].FeedForward(input, useDropouts).activation;
+                input = mLayers[i].FeedForward(input).activation;
             return input;
         }
 
         public Vector<double> Detect(Vector<double> input)
         {
-            return this.FeedForward(input, mParameters.UseDropouts);
+            return this.FeedForward(input);
         }
         private Vector<double> costDerivative(Vector<double> activations, Vector<double> expected)
         {

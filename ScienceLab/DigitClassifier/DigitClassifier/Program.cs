@@ -55,13 +55,17 @@ namespace DigitClassifier
                 ////Cross-entropy
                 //HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 30, MiniBatchSize = 10, LearningRate = 0.5, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.967 };
                 //network = new Network(hyperParameters, 784, 100, 10);
-                
+
                 ////Cross-entropy with regulation
                 //HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 60, MiniBatchSize = 10, LearningRate = 0.1,  RegulationLambda = 5.0, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.98 };
                 //network = new Network(hyperParameters, 784, 100, 10);
-                
+
                 ////Cross-entropy with regulation - 120 epochs
-                HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 120, MiniBatchSize = 10, LearningRate = 0.1,  RegulationLambda = 5.0, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.98 };
+                //HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 120, MiniBatchSize = 10, LearningRate = 0.1,  RegulationLambda = 5.0, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.98 };
+                //network = new Network(hyperParameters, 784, 100, 10);
+
+                ////Cross-entropy with regulation - 120 epochs - with dropouts
+                HyperParameters hyperParameters = new HyperParameters { CostFunctionName = "CrossEntropyCost", Epochs = 240, MiniBatchSize = 10, LearningRate = 1,  RegulationLambda = 5.0, TestSize = testingSet.Count, AutoSave = true, AutoSaveThreshold = 0.98, UseDropouts = true };
                 network = new Network(hyperParameters, 784, 100, 10);
 
                 hookupEvents(network);
@@ -73,15 +77,6 @@ namespace DigitClassifier
                     return convertToByte(actual) == convertToByte(expected);
                 }, testingSet);
 
-                ////Cross-entropy regulated
-                //network = new Network(new CrossEntropyCost(), 784, 100, 10);
-                ////Train the network
-                //network.Train(trainingSet, 30, 10, 0.1, testingSet, 10, 5.0);
-
-                //Cross-entropy regulated with dropouts
-                //network = new Network(new CrossEntropyCost(), 784, 200, 10);
-                //Train the network
-                //network.Train(trainingSet, 120, 10, 0.1, testingSet, 500, 5.0, useDropouts:true, saveBestRun:true, runTarget:0.982);
                 Console.WriteLine("\nNetwork is trained!");
             }
 
@@ -184,7 +179,7 @@ namespace DigitClassifier
                 Console.SetCursorPosition(left, top);
                 Console.Write(string.Format("{0:P2}", e.Sample / (e.DataSize * 1.0 / e.BatchSize)));
             };
-            network.OnMiniBatchEnd += (o, e) =>
+            network.OnEpochEnd += (o, e) =>
             {
                 Console.SetCursorPosition(left, top);
                 Console.WriteLine("100.00 %");

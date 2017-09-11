@@ -10,24 +10,20 @@ namespace SharpNet
     public class MatrixMath
     {
         private static Random mRand = new Random();
-        public static int[] PickHalfElements(int count)
+        public static int[] PickMaskedElements(int count, double probability)
         {
             int[] tmp = new int[count];
             for (int i = 0; i < tmp.Length; i++)
                 tmp[i] = i;
-            int[] ret = new int[count / 2];
-            int range = count;
-            for (int i = 0; i < ret.Length; i++)
-            {
-                int index = mRand.Next(0, range);
-                ret[i] = tmp[index];
-                tmp[index] = tmp[range - 1];
-                range--;
-            }
-            Array.Sort(ret);
-            for (int i = 0; i < ret.Length; i++)
-                ret[i] = i;
-            return ret;
+            List<int> chosen = new List<int>();
+
+            for (int i = 0; i < tmp.Length; i++)
+                if (mRand.NextDouble() > probability)
+                    chosen.Add(tmp[i]);
+            if (chosen.Count == count)
+                chosen.RemoveAt(0);
+            chosen.Sort();
+            return chosen.ToArray();
         }
         public static Matrix<double> GenerateMaskingMatrix(int rows, int cols, int[] mask, bool vertical)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathNet.Numerics.LinearAlgebra;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,25 @@ namespace SharpNet
             DataSize = dataSize;
             TestSize = testSize;
             DetectionRate = detectionRate;
+        }
+    }
+    public class NetworkInsightEventArgs: EventArgs
+    {
+        public List<Vector<double>> BiasList { get; private set; }
+        public List<Matrix<double>> WeightList { get; private set; }
+        public NetworkInsightEventArgs(List<Vector<double>> biasList, List<Matrix<double>> weightList)
+        {
+            BiasList = new List<Vector<double>>();
+            for (int i = 0; i < biasList.Count; i++)
+                BiasList.Add(biasList[i].Clone());
+            WeightList = new List<Matrix<double>>();
+            for (int i = 0; i < weightList.Count; i++)
+            {
+                if (weightList[i] != null)
+                    WeightList.Add(weightList[i].Clone());
+                else
+                    WeightList.Add(null);
+            }
         }
     }
 }

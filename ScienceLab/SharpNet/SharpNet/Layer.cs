@@ -14,10 +14,11 @@ namespace SharpNet
     {
         private Vector<double> mBias;
         private Matrix<double> mWeights;
-        private Matrix<double> mMask;
         private Vector<double> mVectorMask;
-        private Matrix<double> mComplement;
-        private Vector<double> mComplementVector;
+        private double mProbability = 1.0;
+        private bool mUseDropouts = false;
+        int[] mSelection;
+
         public Layer(int size, int sizeofPreviousLayer) : this(CreateVector.Random<double>(size, new Normal(0.0, 1.0)),
                             sizeofPreviousLayer > 0 ? CreateMatrix.Random<double>(size, sizeofPreviousLayer, new Normal(0.0, 1.0/ Math.Sqrt(sizeofPreviousLayer))) : null)
         {
@@ -33,70 +34,93 @@ namespace SharpNet
             if (mWeights != null)
                 mWeights = CreateMatrix.Random<double>(mWeights.RowCount, mWeights.ColumnCount, new Normal(0.0, 1.0 / Math.Sqrt(mWeights.ColumnCount)));
         }
-        public void SetMasks(int[] mask, bool selCols)
+        public void SetMasks(double probability)
+        {
+            mSelection = MatrixMath.PickMaskedElements(mBias.Count, mProbability);
+            mProbability = probability;
+            mVectorMask = VectorMath.GenerateMaskVector(mBias.Count, mSelection);
+            UseDropouts = true;
+        }
+
+        public bool UseDropouts
+        {
+            get { return mUseDropouts; }
+            set { mUseDropouts = value;  }
+        }
+       
+        public (Vector<double> activation, Vector<double> weightedInput) FeedForward(Vector<double> activations)
         {
             if (mWeights != null)
             {
-                mMask = MatrixMath.GenerateMaskingMatrix(mWeights.RowCount, mWeights.ColumnCount, mask, selCols);
-                mComplement = MatrixMath.GenerateComplementaryMarix(mWeights.RowCount, mWeights.ColumnCount, mask, selCols);
-                if (mBias.Count == mask.Length)
+                if (UseDropouts)
                 {
-                    mVectorMask = VectorMath.GenerateMaskVector(mBias.Count, mask);
-                    mComplementVector = VectorMath.GenerateMaskVector(mBias.Count, mask);
+                    Vector<double> weighted = mWeights * activations + mBias; 
+                    return (VectorMath.Sigmoid(weighted).PointwiseMultiply(mVectorMask), weighted);
                 }
                 else
                 {
-                    mVectorMask = null;
-                    mComplementVector = null;
+                    Vector<double> weighted = mWeights * activations + mBias;
+                    return (VectorMath.Sigmoid(weighted), weighted);
                 }
-            }
-        }
-        public void ClearMasks()
-        {
-            mMask = null;
-            mComplement = null;
-        }
-        public (Vector<double> activation, Vector<double> weightedInput) FeedForward(Vector<double> activations, bool useDropout = false)
-        {
-            if (mWeights != null)
-            {
-                Vector<double> weighted = null;
-                if (mMask != null && mVectorMask != null)
-                    weighted = mWeights.PointwiseMultiply(mMask) * activations + mBias.PointwiseMultiply(mVectorMask);
-                else if (mMask != null)
-                    weighted = mWeights.PointwiseMultiply(mMask) * activations + mBias;
-                else if (useDropout)
-                    weighted = mWeights * 0.5 * activations + mBias;
-                else 
-                    weighted = mWeights * activations + mBias;
-                return (VectorMath.Sigmoid(weighted), weighted);
+
             }
             else
-                return (activations, activations);
+            {
+                if (UseDropouts)
+                    return (activations.PointwiseMultiply(mVectorMask), activations);
+                else
+                    return (activations, activations);
+            }
         }
 
         public Matrix<double> Weights
         {
             get
             {
-                if (mMask != null)
-                    return mWeights.PointwiseMultiply(mMask);
+                if (UseDropouts)
+                {
+                    var temp = MatrixMath.GenerateMaskingMatrix(mWeights.RowCount, mWeights.ColumnCount, mSelection, false);
+                    return mWeights.PointwiseMultiply(temp);
+                }
                 else
                     return mWeights;
             }
         }
+        public Vector<double> Bias
+        {
+            get
+            {
+                if (UseDropouts)
+                    return mBias.PointwiseMultiply(mVectorMask);
+                else
+                    return mBias;
+            }
+        }
+        public Vector<double> Mask
+        {
+            get
+            {
+                return mVectorMask;
+            }
+        }
         public void AdjustWeights(Matrix<double> delta, double weighDecay)
         {
-            if (mComplement != null)
-                mWeights = MatrixMath.UpdateMatrixWithMask( mWeights, mWeights * weighDecay - delta, mMask, mComplement);
-            else
+            ////if (mMatrixMask != null)
+            ////    MatrixMath.UpdateMatrixWithMask(mWeights, mWeights * weighDecay - delta, mMatrixMask, mMatrixComMask);
+            ////else
+            //if (UseDropouts)
+            //{
+            //    var temp = MatrixMath.GenerateMaskingMatrix(mWeights.RowCount, mWeights.ColumnCount, mSelection, false);
+            //    mWeights = mWeights * weighDecay - delta.PointwiseMultiply(temp);
+            //}
+            //else
                 mWeights = mWeights * weighDecay - delta;
         }
         public void AdjustBias(Vector<double> delta)
         {
-            if (mComplementVector != null)
-                mBias = VectorMath.UpdateVectorWithMask(mBias, mBias - delta, mVectorMask, mComplementVector);
-            else
+            //if (UseDropouts)
+            //    mBias = mBias - delta.PointwiseMultiply(mVectorMask);
+            //else
                 mBias = mBias - delta;
         }
 
@@ -120,7 +144,7 @@ namespace SharpNet
                 {
                     for (int x = 0; x < mWeights.ColumnCount; x++)
                     {
-                        writer.Write(trainedWithDropouts? mWeights[y, x] * 0.5 : mWeights[y, x]);
+                        writer.Write(mWeights[y, x]);
                         writer.Write(";");
                     }
                     writer.WriteLine();
