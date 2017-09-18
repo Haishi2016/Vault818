@@ -78,25 +78,13 @@
 						}
 					}
 				}
-				//addRing(250, startingY,startingScale);
-				//addRing(270, startingY, startingScale);
-				//addRing(290, startingY, startingScale);
-				//addRing(310, startingY, startingScale);
 				setTimeout(refreshData, 1000);
 			}
 			function healRing(index, radius, y, scale){
-				//var ring = makeRing(radius, y, scale, false);
-				//scene.remove(rings[index].particleSystem );
-				//rings[index].particleSystem = ring.particleSystem;
-				rings[index].broken = false; 
-				//scene.add(rings[index].particleSystem);
+				rings[index].broken = false; 			
 			}
 			function breakRing(index, radius, y, scale){
-				//var ring = makeRing(radius, y, scale, true);
-				//scene.remove(rings[index].particleSystem );
-				//rings[index].particleSystem = ring.particleSystem;
 				rings[index].broken = true; 
-				//scene.add(rings[index].particleSystem);
 			}
 			function updateRing(index){
 
@@ -131,22 +119,21 @@
 				mesh.receiveShadow = true;
 				scene.add( mesh );
 
-				var planeGeometry = new THREE.PlaneBufferGeometry( 2000, 2000, 320, 320 );
-				var planeMaterial = new THREE.ShadowMaterial( { color: 0x00ff00 } )
+				var planeGeometry = new THREE.PlaneBufferGeometry(10000,10000);
+				var planeMaterial = new THREE.ShadowMaterial( { color: 0x00ff00, specular: 0x050505 } )
 				var plane = new THREE.Mesh( planeGeometry, planeMaterial );
 				plane.receiveShadow = true;
 				plane.rotation.x = -Math.PI / 2;
 				plane.position.y = 20;
 				scene.add( plane );
 
-				var spotLight = new THREE.SpotLight( 0xffffff );
-				spotLight.position.set( -300, 300, 500 );
-				spotLight.shadow.mapSize.width = 5120;  // default
-				spotLight.shadow.mapSize.height = 5120; // default
-				spotLight.shadow.camera.near = 0.5;       // default
-				spotLight.shadow.camera.far = 50000      // default
-
-				scene.add( spotLight );				
+				var light = new THREE.DirectionalLight( 0xffffff,1);
+				light.position.set( -300, 300, 500 );
+				light.position.multiplyScalar( 30 );
+				light.color.setHSL( 0.1, 1, 0.95 );
+				light.castShadow = true;
+				
+				scene.add( light );								
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.shadowMap.enabled = true;
