@@ -16,16 +16,17 @@
 			}
 			.button{
 				position: absolute;
+				top:10px;
+				right:50px;
+				color:white;
 			}
         </style>
     </head>
     <body>
 		<div id="info" class="info">
-			# of Containers: <span id="containerCount" class="count">0</span>
+			# of stars: <span id="containerCount" class="count">0</span>
 		</div>
-		<a id="init" onclick="changeTargetCounts(900000)" href="#" class="button" style="left:50px; top:10px;">Init</div>
-		<a id="init" onclick="changeTargetCounts(999999)" href="#" class="button" style="left:100px; top:10px;">More</div>
-		<a id="init" onclick="changeTargetCounts(999000)" href="#" class="button" style="left:150px; top:10px;">Fail</div>
+		<a id="init" onclick="changeTargetCounts(Math.random()*5000)" href="#" class="button">Update Ring</div>		
 		<script src="three.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script type="x-shader/x-vertex" id="vertexshader">
@@ -91,7 +92,7 @@
 			var approchSpeed = 2;
 			init();
 			animate();
-			refreshData();
+			updateStars();
 			function changeTargetCounts(a)
 			{				
 				var scaled = a / particleScale;
@@ -108,11 +109,7 @@
 				}
 				updateContainerCount(a);
 			}
-			function refreshData()
-			{
-				updateStars();
-				setTimeout(refreshData, 1000);
-			}
+			
 			function updateContainerCount(count){
 				var lastValue = parseInt($('#containerCount').text());				
 				$('#containerCount').text(count);
@@ -162,6 +159,14 @@
 				mesh.receiveShadow = true;
 				scene.add( mesh );
 
+				var ringMaterial = new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'texture/ring.png' ), opacity: 0.8, transparent:true});
+				var ring = new THREE.RingGeometry(250, 480, 300);
+				var ringMesh = new THREE.Mesh( ring, ringMaterial );
+				ringMesh.rotation.x = -Math.PI / 2;
+				ringMesh.position.y = 22;
+				scene.add( ringMesh );
+
+
 				var light = new THREE.DirectionalLight( 0xffffff,1);
 				light.position.set( -300, 300, 500 );
 				light.position.multiplyScalar( 30 );
@@ -198,7 +203,7 @@
 				renderer.autoClearColor = false;
 				document.body.appendChild( renderer.domElement );
 				
-				refreshData();
+				//refreshData();
 
 				window.addEventListener( 'resize', onWindowResize, false );
 			}
@@ -293,7 +298,7 @@
 					angles.push(angle);
 					radiuses.push(ringSize);
 					fallRadiuses.push(ringSize);
-					distances.push(ringSize + farRing);
+					distances.push(ringSize + farRing + Math.random() * 400);
 					speeds.push(0.0);
 					states.push(0);
 				}
