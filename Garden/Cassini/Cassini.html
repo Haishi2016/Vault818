@@ -301,9 +301,9 @@
 						if (states[i] == 1)
 							sizes[i] = 10 * ( 1 + Math.sin( 0.1 * i + time ) );
 						else if (states[i] == 2)
-							sizes[i] = 100 * ( 1 + Math.sin( 0.1 * i + time ) );
+							sizes[i] = 0.6 * Math.min(350, (Math.max(distances[i] - nearRing + radiuses[i], 0))) ;
 						else 
-							sizes[i] = 100 * ( 1 + Math.sin( 0.1 * i + time ) );
+							sizes[i] = 0.2 * Math.min(350, (Math.max(distances[i] - nearRing + radiuses[i], 0))) ;
 					}	
 					for (var i = 0; i < particleCount; i++){
 						var col = Math.random() * 255.0;
