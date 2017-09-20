@@ -4,20 +4,44 @@
         <meta charset="utf-8">
         <title>Hello, World!</title>
         <style>
-            body {margin:0;}
+            body {margin:0;overflow:hidden;}
             canvas {width:100%; height:100%}
 			.info{
 				position: absolute;
 				left: 10px;
 				top:10px;
 				color:white;
-				font-family:Arial, Helvetica, sans-serif;
+				font-family: Agency FB, Arial, Helvetica, sans-serif;
 				font-size: 40pt;
+				background-color: rgba(50,50,50,0.5);
+				padding: 10px;
+				width:360px;
+				overflow:hidden;
 			}
 			.button{
 				position: absolute;
 				top:10px;
 				right:50px;
+				color:white;
+			}
+			.chart{
+				position: absolute;
+				left: 10px;
+				top:100px;
+				color:white;
+				background-color: rgba(50,50,50,0.5);
+				padding: 10px;
+				width:360px;
+				height:120px;
+				background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .5) 25%, rgba(255, 255, 255, .5) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .5) 75%, rgba(255, 255, 255, .5) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .5) 25%, rgba(255, 255, 255, .5) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .5) 75%, rgba(255, 255, 255, .5) 76%, transparent 77%, transparent);
+  				background-size:30px 30px;
+			}
+			path {
+				stroke: white;
+				stroke-width: 2;
+				fill: none;
+			}
+			.count{
 				color:white;
 			}
         </style>
@@ -26,8 +50,10 @@
 		<div id="info" class="info">
 			# of stars: <span id="containerCount" class="count">0</span>
 		</div>
+		<div class = "chart" id="historyChart"></div>
 		<a id="init" onclick="changeTargetCounts(Math.random()*1000000)" href="#" class="button">Update Ring</div>		
 		<script src="three.js"></script>
+		<script src="http://mbostock.github.com/d3/d3.v2.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script type="x-shader/x-vertex" id="vertexshader">
 			attribute float size;
@@ -90,9 +116,42 @@
 			var fallBatchSize = 100;
 			var geometry = null;
 			var approchSpeed = 2;
+			var countHistory = [0,0,0,0,0,0,0,0,0,0];
+			var lastValue = 0;
+			var graph,x,y,line;
 			init();
 			animate();
 			updateStars();
+			setupGraph();
+			function setupGraph(){
+				var width = 360;
+				var height = 120;
+				graph = d3.select("#historyChart").append("svg:svg").attr("width", "100%").attr("height", "100%");
+				x = d3.scale.linear().domain([0, 10]).range([0, width]); 
+				y = d3.scale.linear().domain([0, 1000000]).range([0, height]);
+				line = d3.svg.line()
+					.x(function(d,i) { 
+						return x(i); 
+					})
+					.y(function(d) { 
+						return height-y(d); 
+					})
+					.interpolate('linear');
+				graph.append("svg:path").attr("d", line(countHistory));			
+				
+			}
+
+			function redrawWithAnimation() {
+				graph.selectAll("path")
+					.data([countHistory])
+					.attr("transform", "translate(" + x(1) + ")")
+					.attr("d", line) 
+					.transition() 
+					.ease("linear")
+					.duration(1000) 
+					.attr("transform", "translate(" + x(0) + ")"); 
+			}
+
 			function changeTargetCounts(a)
 			{				
 				var scaled = a / particleScale;
@@ -107,28 +166,38 @@
 					else if (states[i] != 0)
 						states[i] = 2;
 				}
+				if (countHistory.length>=10) {
+					countHistory.shift(); 
+				}
+				countHistory.push(a); 
+				
+			   	redrawWithAnimation();
 				updateContainerCount(a);
 			}
 			
-			function updateContainerCount(count){
-				var lastValue = parseInt($('#containerCount').text());				
+			function updateContainerCount(count){			
 				$('#containerCount').text(count);
 				$('.count').each(function () {
-    				$(this).prop('Counter',lastValue).animate({
-        				Counter: $(this).text()
-    					}, {
-        					duration: 4000,
-        					easing: 'swing',
-        					step: function (now) {
-								if (lastValue > now)
-            						$(this).text(Math.floor(now));
-								else 
-									$(this).text(Math.ceil(now));
-        				}
-    				});
+  					var $this = $(this);
+  					jQuery({ Counter: lastValue }).animate({ Counter: $this.text() }, {
+    					duration: 1000,
+    					easing: 'swing',
+    					step: function () {
+      						$this.text(commaSeparateNumber(Math.ceil(this.Counter)));
+    					}
+  					});
+					lastValue = count;
 				});
 			}
 			
+			function commaSeparateNumber(val)
+    		{
+        		while (/(\d+)(\d{3})/.test(val.toString())){
+          			val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+        		}
+        	return val;
+  			}
+
 			function init() {
 				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
 				camera.position.z = 400;
@@ -159,11 +228,11 @@
 				mesh.receiveShadow = true;
 				scene.add( mesh );
 
-				var ringMaterial = new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'texture/ring.png' ), opacity: 0.8, transparent:true});
+				var ringMaterial = new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'texture/ring.png' ), opacity: 0.5, transparent:true});
 				var ring = new THREE.RingGeometry(250, 480, 300);
 				var ringMesh = new THREE.Mesh( ring, ringMaterial );
 				ringMesh.rotation.x = -Math.PI / 2;
-				ringMesh.position.y = 22;
+				ringMesh.position.y = 21;
 				scene.add( ringMesh );
 
 
