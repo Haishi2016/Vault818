@@ -9,7 +9,7 @@ This is a repository for random ideas, demos and small tools. The layout of this
 [EMPTY]
 
 ## Classroom (I)
-Classroom holds a number of projects for my Computer Science class. 
+As a [TEALS](https://www.tealsk12.org/) volunteer, I teach Compute Science in high schools. Classroom holds several projects for my Java programming class.
 
 - [**PrintCircle**](./Classroom/PrintCircle) includes three different implementations of a program that prints a circle on the console. ![Java](./imgs/java.png)
 - [**PrintImage**](./Classroom/PrintImage) includes a sample program that converts an image to an ASCII image. ![Java](./imgs/java.png)
