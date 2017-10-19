@@ -1,0 +1,27 @@
+version: '3'
+services:
+    master:
+        image: hbai/mysql:5.7-master 
+        restart: unless-stopped
+        ports:
+            - 3306:3306
+        environment:
+            - MYSQL_ROOT_PASSWORD=master_passw0rd
+            - MYSQL_REPLICA_USER=replica
+            - MYSQL_REPLICA_PASS=replica_Passw0rd
+            - CREATE_PET_DB=true
+        command: ["mysqld", "--log-bin=mysql-bin", "--server-id=1", "--binlog-do-db=pet_db"]
+    slave:
+        image: hbai/mysql:5.7-slave 
+        restart: unless-stopped
+        ports:
+            - 3307:3306
+        environment:
+            - MYSQL_ROOT_PASSWORD=slave_passw0rd
+            - MYSQL_REPLICA_USER=replica
+            - MYSQL_REPLICA_PASS=replica_Passw0rd
+            - MYSQL_MASTER=master
+            - MYSQL_MASTER_WAIT_TIME=10
+            - MYSQL_MASTER_PORT=3306
+            - CREATE_PET_DB=true
+        command: ["mysqld", "--log-bin=mysql-bin", "--server-id=2"]

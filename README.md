@@ -57,7 +57,7 @@ Programs related to computer graphics.
 [EMPTY]
 
 ## Nuka-Cola Bottler
-[EMPTY]
+Nuka-Cola Bottler produces container-related projects.
 
 ## Power Generator
 [EMPTY]
