@@ -34,3 +34,5 @@ Above query returns
 1 row in set (0.00 sec)
 
 ```
+
+This work is inspired by [this repository](https://github.com/twang2218/mysql-replica).
