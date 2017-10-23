@@ -79,7 +79,7 @@ Science Lab is the home of AI and ML focused projects.
 
 ## Storage Room
 Storage Room archives my implementation/recreation of algorithms as I go through some books.
-- [**Hands-On Machine Learning with Scikit-Learn & TensorFlow**](./Storage-Room/Hands-On-Room) ![Python](./imgs/python.png) ![TensorFlow](./imgs/tensorflow.png) ![Sciki-Learn](./imgs/scikitlearn.png)
+- [**Hands-On Machine Learning with Scikit-Learn & TensorFlow**](./Storage-Room/Hands-On-ML) ![Python](./imgs/python.png) ![TensorFlow](./imgs/tensorflow.png) ![Sciki-Learn](./imgs/scikitlearn.png)
 
 ## Vault Door
 [EMPTY]
