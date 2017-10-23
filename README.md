@@ -67,6 +67,8 @@ Nuka-Cola Bottler produces container-related projects.
 Radio Station links to my other open source projects.
 
 - [OSB-checker](https://github.com/Haishi2016/osb-checker) is a test suite that verifies an OSB API endpoint against the [OSB API](https://github.com/openservicebrokerapi/servicebroker/) spec. ![OSB](./imgs/osb.png)
+- [OWL](https://github.com/Haishi2016/owl) Fear the OWL! ![Python](./imgs/python.png)
+- [SFNuGet](https://github.com/Azure/SFNuGet) is a PowerShell module that allows you to package a Service Fabric service as a NuGet package. ![PowerShell](./imgs/powershell.png) ![SF](./imgs/sf.png)
 
 ## Science Lab
 Science Lab is the home of AI and ML focused projects.
@@ -76,7 +78,8 @@ Science Lab is the home of AI and ML focused projects.
 - [**SharpNet**](./ScienceLab/SharpNet) a simple neural netowrk implemented in C#. ![C# 7.0](./imgs/c-sharp-7.png) ![ML](./imgs/ml.png)
 
 ## Storage Room
-[EMPTY]
+Storage Room archives my implementation/recreation of algorithms as I go through some books.
+- [**Hands-On Machine Learning with Scikit-Learn & TensorFlow**](./Storage-Room/Hands-On-Room) ![Python](./imgs/python.png) ![TensorFlow](./imgs/tensorflow.png) ![Sciki-Learn](./imgs/scikitlearn.png)
 
 ## Vault Door
 [EMPTY]
