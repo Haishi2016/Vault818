@@ -38,9 +38,23 @@ prediction_model.fit(x,y)
 t0, t1 = prediction_model.intercept_[0], prediction_model.coef_[0][0]
 plt.plot(x, t0 + t1*x, "b")
 
-#show plot
-plt.show()
 
 #make a prediction for Cyprus
 X_new = [[22587]] #Cypru's GDP per capita
-print(prediction_model.predict(X_new)) 
+Y_linear = prediction_model.predict(X_new)
+
+#use k_nearest neighor regression
+prediction_model = sklearn.neighbors.KNeighborsRegressor(n_neighbors=3)
+
+#train the model
+prediction_model.fit(x,y)
+
+#make a prediction for Cyprus
+Y_neighbor = prediction_model.predict(X_new)
+
+plt.plot(X_new, Y_linear, "gs")
+plt.plot(X_new, Y_neighbor, "rs")
+
+plt.annotate('Linear regression', xy=(X_new[0][0], Y_linear[0][0]), xytext=(X_new[0][0]-10000, Y_linear[0][0]+1), arrowprops = dict(facecolor='black', width=0.5, shrink=0.1, headwidth=5))
+plt.annotate('K-neighbor regression', xy=(X_new[0][0], Y_neighbor[0][0]), xytext=(X_new[0][0], Y_neighbor[0][0]-0.8), arrowprops = dict(facecolor='black', width=0.5, shrink=0.1, headwidth=5))
+plt.show()
