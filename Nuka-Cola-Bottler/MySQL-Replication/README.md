@@ -39,15 +39,41 @@ Above query returns
 
 ## Service Fabric
 
+1. Select cluster to use:
+
+```bash
+sfctl cluster select --endpoint http://<your cluster>.westus.cloudapp.azure.com:19080
+```
+2. Deploy the app:
 ```bash
 cd ~/Vault818/Nuka-Cola-Bottler/MySQL-Replication/Service-Fabric/compose
 sfctl compose create --name MySqlHA --file-path ./docker-compose.yml
 ```
+3. SSH into one of the node on cluster.
+4. Connect to master:
 
-This assumes you have DNS service enabled on the cluster. If you don't, you can either add the DNS service or build a new slave image using the slave\startup-without-dns.sh script. Then, in your compose file, you specify a list of possible master IP addresses:
+```
+sudo docker run -it --rm mysql sh -c 'exec mysql -h<ip to your master container - look it up on SF Explorer> -P3306 -uroot -pmaster_passw0rd'
+```
+5. Insert record
+6. Connect to client
+
+```
+sudo docker run -it --rm mysql sh -c 'exec mysql -h<ip to your slave container - look it up on SF Explorer> -P3307 -uroot -pslave_passw0rd'
+```
+
+7. Select record
+
+> **NOTE** This assumes you have DNS service enabled on the cluster. If you don't, you can either add the DNS service or build a new slave image using the slave\startup-without-dns.sh script. Then, in your compose file, you specify a list of possible master IP addresses:
 
 ```bash
 MYSQL-MASTER: 10.0.0.4-10.0.0.5-10.0.0.6-10.0.0.7-10.0.0.8
+```
+
+8. Clean up
+
+```bash
+sfctl compose remove --deployment-name MySqlHA
 ```
 
 This work is inspired by [this repository](https://github.com/twang2218/mysql-replica).
