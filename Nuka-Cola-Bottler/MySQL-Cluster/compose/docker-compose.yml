@@ -1,0 +1,52 @@
+version: '3'
+services:
+   gatekeeper:
+      image: hbai/gatekeeper
+      hostname: gatekeeper
+      ports:
+        - 8180:8180
+   management:
+      image: hbai/ha:26
+      hostname: management
+      depends_on:
+         - gatekeeper
+      ports:
+        - 1186:1186
+        - 2202:2202
+        - 33060:33060
+   ndb1:
+      image: hbai/ndb:6
+      hostname: ndb1
+      depends_on:
+         - gatekeeper
+         - management
+      ports:
+         - 3306:3306
+      environment:
+         - NDBID=1
+   ndb2:
+      image: hbai/ndb:6
+      hostname: ndb2
+      depends_on:
+         - gatekeeper
+         - management
+      ports:
+         - 3306:3306
+      environment:
+         - NDBID=2
+   mysql:
+      image: hbai/mysql:6
+      hostname: mysql
+      depends_on:
+         - gatekeeper
+         - management
+         - ndb1
+         - ndb2
+      environment:
+         - MYSQL_RANDOM_ROOT_PASSWORD=true
+      ports:
+         - 3306:3306
+networks:
+   default:
+      external:
+         name: nat   
