@@ -13,7 +13,7 @@ services:
       ports:
         - 1186:1186
    ndb1:
-      image: hbai/ndb:8
+      image: hbai/ndb:9
       hostname: ndb1
       depends_on:
          - gatekeeper
@@ -24,7 +24,7 @@ services:
       environment:
          - NDBID=1
    ndb2:
-      image: hbai/ndb:8
+      image: hbai/ndb:9
       hostname: ndb2
       depends_on:
          - gatekeeper
@@ -35,7 +35,7 @@ services:
       environment:
          - NDBID=2
    mysql:
-      image: hbai/mysql:10
+      image: hbai/mysql:12
       hostname: mysql
       depends_on:
          - gatekeeper

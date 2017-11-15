@@ -9,7 +9,13 @@ tail -1 /etc/hosts | sed -e "s/${HH}/ndb${NDBID}/" >> /etc/hosts
 
 echo "Sending Launched Signal"
 
-curl -sX PUT http://gatekeeper:8180/ndb${NDBID}/LAUNCHED
+LAUNCHED=""
+while [[ "$LAUNCHED" != "LAUNCHED" ]]
+do
+  curl -sX PUT http://gatekeeper:8180/ndb${NDBID}/LAUNCHED
+  LAUNCHED=`curl -sL http://gatekeeper:8180/ndb${NDBID}`
+  sleep 1
+done
 
 MANAGEMENT=""
 

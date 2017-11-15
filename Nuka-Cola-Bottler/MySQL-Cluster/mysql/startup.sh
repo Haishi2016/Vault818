@@ -9,7 +9,13 @@ tail -1 /etc/hosts | sed -e "s/${HH}/mysql/" >> /etc/hosts
 
 echo "Sending Launched Signal"
 
-curl -sX PUT http://gatekeeper:8180/mysql/LAUNCHED
+LAUNCHED=""
+while [[ "$LAUNCHED" != "LAUNCHED" ]]
+do
+  curl -sX PUT http://gatekeeper:8180/mysql/LAUNCHED
+  LAUNCHED=`curl -sL http://gatekeeper:8180/mysql`
+  sleep 1
+done
 
 echo "Start Waiting for Containers"
 
