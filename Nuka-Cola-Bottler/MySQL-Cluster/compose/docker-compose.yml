@@ -6,36 +6,36 @@ services:
       ports:
         - 8180:8180
    management:
-      image: hbai/ha:26
+      image: hbai/ha:30
       hostname: management
       depends_on:
          - gatekeeper
       ports:
         - 1186:1186
-        - 2202:2202
-        - 33060:33060
    ndb1:
-      image: hbai/ndb:6
+      image: hbai/ndb:8
       hostname: ndb1
       depends_on:
          - gatekeeper
          - management
       ports:
-         - 3306:3306
+         - 2202:2202
+         - 50501:50501
       environment:
          - NDBID=1
    ndb2:
-      image: hbai/ndb:6
+      image: hbai/ndb:8
       hostname: ndb2
       depends_on:
          - gatekeeper
          - management
       ports:
-         - 3306:3306
+         - 2202:2202
+         - 50502:50502
       environment:
          - NDBID=2
    mysql:
-      image: hbai/mysql:6
+      image: hbai/mysql:10
       hostname: mysql
       depends_on:
          - gatekeeper

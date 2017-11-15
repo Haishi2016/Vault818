@@ -1,4 +1,4 @@
-[ndbd_default]
+[ndbd default]
 NoOfReplicas=2
 DataMemory=80M
 IndexMemory=18M

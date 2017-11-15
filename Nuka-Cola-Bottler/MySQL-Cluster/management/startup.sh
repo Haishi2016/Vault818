@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Updating Host Name"
+
 #workaround to set hostname
 sed -i 's/localhost.localdomain/management/' /etc/sysconfig/network
 HH=`cat /etc/hostname`
@@ -18,10 +20,13 @@ do
   if [ "$DNB2" == "Bad Request" ]; then NDB2=""; fi
   if [ "$MYSQL" == "Bad Request" ]; then MYSQL=""; fi
   sleep 1
+  echo "Waiting..."
 done
 
 
 ndb_mgmd -f /usr/mysql-cluster/config.ini
+
+echo "Sending Ready Signal"
 
 curl -sX PUT http://gatekeeper:8180/management/READY
 
