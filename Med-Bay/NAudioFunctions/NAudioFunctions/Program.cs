@@ -15,6 +15,7 @@ namespace NAudioFunctions
             string inputFile = "exciting.wav";
             string outputFile = Path.GetFileNameWithoutExtension(inputFile) + "_mono.wav";
             ConvertWaveToMonoWave(inputFile, outputFile);
+            SplitWaveFile(inputFile, Path.GetFileNameWithoutExtension(inputFile) + "{0}.wav", 1);
         }
         static void ConvertMP3toWave(string file, string outputFile)
         {
@@ -35,6 +36,31 @@ namespace NAudioFunctions
                         WaveFileWriter.CreateWaveFile(outputFile, upSampler);
                     }
                 }                
+            }
+        }
+        static void SplitWaveFile(string file, string outputFilePattern, int chunkSizeinSeconds)
+        {
+            using (WaveFileReader reader = new WaveFileReader(file))
+            {
+                int bufferSize = reader.WaveFormat.AverageBytesPerSecond;
+                byte[] buffer = new byte[bufferSize];
+                int bytesRead = 0;
+                int fileCount = 1;
+                string fileName = string.Format(outputFilePattern, fileCount);
+                WaveFileWriter writer = null;
+                while ((bytesRead = reader.Read(buffer,0, buffer.Length)) > 0)
+                {
+                    if (writer == null)
+                        writer = new WaveFileWriter(string.Format(outputFilePattern, fileCount), reader.WaveFormat);
+                    writer.Write(buffer, 0, bytesRead);
+                    if (reader.Position >= reader.Length - 1 || reader.Position >= chunkSizeinSeconds * bufferSize * fileCount)
+                    {
+                        writer.Close();
+                        writer.Dispose();
+                        writer = null;
+                        fileCount++;
+                    }
+                }
             }
         }
     }
