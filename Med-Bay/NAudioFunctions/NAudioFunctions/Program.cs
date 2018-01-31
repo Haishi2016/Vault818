@@ -12,10 +12,10 @@ namespace NAudioFunctions
     {
         static void Main(string[] args)
         {
-            string inputFile = "exciting.wav";
+            string inputFile = @"d:\ignite.wav";
             string outputFile = Path.GetFileNameWithoutExtension(inputFile) + "_mono.wav";
             ConvertWaveToMonoWave(inputFile, outputFile);
-            SplitWaveFile(inputFile, Path.GetFileNameWithoutExtension(inputFile) + "{0}.wav", 1);
+            SplitWaveFile(inputFile, Path.GetFileNameWithoutExtension(inputFile) + "{0}.wav", 600, 8);
         }
         static void ConvertMP3toWave(string file, string outputFile)
         {
@@ -38,7 +38,7 @@ namespace NAudioFunctions
                 }                
             }
         }
-        static void SplitWaveFile(string file, string outputFilePattern, int chunkSizeinSeconds)
+        static void SplitWaveFile(string file, string outputFilePattern, int chunkSizeinSeconds, int overlapInSeconds)
         {
             using (WaveFileReader reader = new WaveFileReader(file))
             {
@@ -59,6 +59,8 @@ namespace NAudioFunctions
                         writer.Dispose();
                         writer = null;
                         fileCount++;
+                        if (reader.Position < reader.Length)
+                            reader.Position -= bufferSize * overlapInSeconds;
                     }
                 }
             }
