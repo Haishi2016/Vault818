@@ -1,0 +1,16 @@
+IMG_0220.JPG,Lemon
+IMG_0221.JPG,Apple
+IMG_0222.JPG,Broccoli
+IMG_0223.JPG,Onion
+IMG_0224.JPG,Romaine
+IMG_0225.JPG,Carrot
+IMG_0226.JPG,Mini muffin
+IMG_0227.JPG,Potato chip
+IMG_0228.JPG,Celery
+IMG_0229.JPG,Peach
+IMG_0230.JPG,Tomato
+IMG_0231.JPG,Chocolate covered almond
+IMG_0232.JPG,Kiwi
+IMG_0234.JPG,Bread
+IMG_0237.JPG,Yam
+IMG_9374.JPG,Fish cracker
