@@ -26,7 +26,7 @@ The preceding examples don't recognize word boundaries. If you search for "cat" 
 ![indexof-2](../../imgs/diagrams/indexof-2.png)
 
 
-If you want to search for a whole word only, you can use one of the following solutions.
+If you want to search for a whole word only (i.e. to return **5** instead **2** in the preceding example), you can use one of the following solutions.
 
 ### Split the string
 You can split the target string by spaces into a string array, and then check if the word matches with any of the array element. For example,
