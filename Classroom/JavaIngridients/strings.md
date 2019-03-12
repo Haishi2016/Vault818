@@ -9,6 +9,9 @@ String pattern = "some";
 
 int index = text.indexOf(pattern);
 ```
+The previous example returns **8**. You can imagine Java slides the pattern along the target text until it finds a match. Then, it returns the index of the first matching character, as shown below:
+![indexof](../../imgs/diagrams/indexof.png)
+
 The **indexOf()** method is case-sensitive. If you try to search for "Some" in the preceding example, you'll get -1 because "Some" doesn't match with "some". If you want to ignore case, you can use **toLowerCase()** to convert both strings to all lower case letters and then do the search:
 
 ```java
