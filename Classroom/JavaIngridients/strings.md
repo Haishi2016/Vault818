@@ -21,7 +21,12 @@ String pattern = "some";
 int index = text.toLowerCase().indexOf(pattern.toLowerCase());
 ```
 ## Search for a whole word
-The preceding examples don't recognize word boundaries. If you search for "cat" in a sentence "I like to eat catfish", you'll get a match because the "cat" pattern does appear in the sentence. If you want to search for a whole word only, you can use one of the following solutions.
+The preceding examples don't recognize word boundaries. If you search for "cat" in a sentence "I like to eat catfish", you'll get a match because the "cat" pattern does appear in the sentence. Continuing with the previous example - if you search for "is" in the target text, you'll get **2**, which is the first match from the word "this", as shown below:
+
+![indexof-2](../../imgs/diagrams/indexof-2.png)
+
+
+If you want to search for a whole word only, you can use one of the following solutions.
 
 ### Split the string
 You can split the target string by spaces into a string array, and then check if the word matches with any of the array element. For example,
