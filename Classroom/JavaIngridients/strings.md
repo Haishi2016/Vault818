@@ -24,7 +24,7 @@ The preceding examples don't recognize word boundaries. If you search for "cat" 
 You can split the target string by spaces into a string array, and then check if the word matches with any of the array element. For example,
 
 ```java
-String[] parts = “this is some text”.split(“ “);
+String[] parts = "this is some text".split(“ “);
 ```
 
 This gives you a string array with 4 individual words: “this”, “is”, “some” and “text”. Then, you can loop through the array and search for the word:
