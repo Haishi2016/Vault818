@@ -22,6 +22,7 @@ Diner is a relaxing environment where old and new ideas are causally shared. Thi
 - [**MongoToGremlin**](./Diner/MongoToGremlin) is a program that transforms some MongoDB data into graphs using [Gremlin](https://en.wikipedia.org/wiki/Gremlin_(programming_language)). The data is originated from [this GitHub project](https://github.com/scotch-io/mean-google-maps). This code is tested against [Microsoft Azure Cosmos DB](https://azure.microsoft.com/en-us/services/cosmos-db/?WT.srch=1&WT.mc_id=AID__SEM_xaYpE5Fy)
 ![Node.js](./imgs/node-js.png) ![Gremlin](./imgs/gremlin.png) ![Cosmos DB](./imgs/cosmos-db.png) ![MongoDB](./imgs/mongo-db.png)
 - [**NANDAdder**](./Diner/NANDAdder) implements a NAND gate, then a bit adder on top of NAND gates, and then a byte adder on top of bit adders. ![C# 7.0](./imgs/c-sharp-7.png)
+- [**NAudioFunction**](./Diner/NAudioFunctions) a few methods for handling .wav files. ![C# 7.0](./imgs/c-sharp-7.png)
 
 ## Elevator
 There are always new ways to write programs. New programming languages and frameworks come and go, and they leave a bunch of "Hello, World!" programs in the elevator.
@@ -30,7 +31,7 @@ There are always new ways to write programs. New programming languages and frame
 - [**HelloWorld-ONNX**](./Elevator/HelloWorld-ONNX) Hello, World! from [ONNX](https://github.com/onnx/onnx).  ![ML](./imgs/ml.png) ![Python](./imgs/python.png) ![ONNX](./imgs/onnx.png)
 - [**HelloWorld-PowerShellModule**](./Elevator/HelloWorld-PowerShellModule) Hello, World! from [Microsoft PowerShell](https://msdn.microsoft.com/en-us/powershell/mt173057.aspx). ![PowerShell](./imgs/powershell.png)
 - [**HelloWorld-ProtoActor**](./Elevator/HelloWorld-ProtoActor) Hello, World! from [Proto Actor](http://proto.actor/). ![C# 7.0](./imgs/c-sharp-7.png) ![Proto Actor](./imgs/proto-actor.png)
-- [**HelloWorld-Quantum**](./Elevator/HelloWorld-Quantum) Hello, World! from [Microsoft Quantum Development Kit](https://marketplace.visualstudio.com/items?itemName=quantum.DevKit) ![Quantum](./imgs/quantum.png)
+- [**HelloWorld-Quantum**](./Elevator/HelloWorld-Quantum) Hello, World! from [Microsoft Quantum Development Kit](https://marketplace.visualstudio.com/items?itemName=quantum.DevKit) ![C# 7.0](./imgs/c-sharp-7.png) ![Quantum](./imgs/quantum.png)
 - [**HelloWorld-TensorFlow**](./Elevator/HelloWorld-TensorFlow) Hello, World! from [TensorFlow](https://www.tensorflow.org/). ![ML](./imgs/ml.png) ![Python](./imgs/python.png) ![TensorFlow](./imgs/tensorflow.png)
 
 ## Fitness Room (E)
