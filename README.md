@@ -30,6 +30,7 @@ There are always new ways to write programs. New programming languages and frame
 - [**HelloWorld-ONNX**](./Elevator/HelloWorld-ONNX) Hello, World! from [ONNX](https://github.com/onnx/onnx).  ![ML](./imgs/ml.png) ![Python](./imgs/python.png) ![ONNX](./imgs/onnx.png)
 - [**HelloWorld-PowerShellModule**](./Elevator/HelloWorld-PowerShellModule) Hello, World! from [Microsoft PowerShell](https://msdn.microsoft.com/en-us/powershell/mt173057.aspx). ![PowerShell](./imgs/powershell.png)
 - [**HelloWorld-ProtoActor**](./Elevator/HelloWorld-ProtoActor) Hello, World! from [Proto Actor](http://proto.actor/). ![C# 7.0](./imgs/c-sharp-7.png) ![Proto Actor](./imgs/proto-actor.png)
+- [**HelloWorld-Quantum**](./Elevator/HelloWorld-Quantum) Hello, World! from [Microsoft Quantum Development Kit](https://marketplace.visualstudio.com/items?itemName=quantum.DevKit) ![Quantum](./imgs/quantum.png)
 - [**HelloWorld-TensorFlow**](./Elevator/HelloWorld-TensorFlow) Hello, World! from [TensorFlow](https://www.tensorflow.org/). ![ML](./imgs/ml.png) ![Python](./imgs/python.png) ![TensorFlow](./imgs/tensorflow.png)
 
 ## Fitness Room (E)
