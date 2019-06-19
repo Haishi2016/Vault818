@@ -50,10 +50,14 @@ Programs related to computer graphics.
 [EMPTY]
 
 ## Lounge (C)
-[EMPTY]
+A collection of questions and their solutions.
+
+[Quantum questions](./Lounge/Quantum)
 
 ## Med Bay
-[EMPTY]
+A collection of terms.
+
+[v](./Med-Bay/v)
 
 ## Nuclear Reactor
 [EMPTY]
