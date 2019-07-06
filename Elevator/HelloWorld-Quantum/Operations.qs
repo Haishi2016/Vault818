@@ -14,11 +14,11 @@
 			//Ry(ArcSin(1.0/Sqrt(3.0))*2.0, qubit);
 			//AssertProb([PauliZ], [qubit], One, 1.0/3.0, "Error: Outcomes of 1s must be 33.3%", 1E-05);
 
-			let result = Measure([PauliZ],[qubit]);
-			if (result == One) {
-				X(qubit);
-			}
-			return result;
+				let result = Measure([PauliZ],[qubit]);
+				if (result == One) {
+					X(qubit);
+				}
+				return result;
 		}        
 
     }
