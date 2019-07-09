@@ -35,7 +35,8 @@ There are always new ways to write programs. New programming languages and frame
 - [**HelloWorld-TensorFlow**](./Elevator/HelloWorld-TensorFlow) Hello, World! from [TensorFlow](https://www.tensorflow.org/). ![ML](./imgs/ml.png) ![Python](./imgs/python.png) ![TensorFlow](./imgs/tensorflow.png)
 
 ## Fitness Room (E)
-[EMPTY]
+A collection of algorithm implemenations
+[Miller-Rabin](./Fitness-Room/Miller-Rabin) A C# implementation of [Miller-Rabin primality test](https://en.wikipedia.org/wiki/Miller–Rabin_primality_test). It finds first 78,498 prime numbers under 12 seconds.
 
 ## Game Room (L)
 Gaming-related projects (excluding graphics-related projects, which are under the _Garden_ folder).
@@ -59,7 +60,8 @@ A collection of terms.
 [c](./Med-Bay/c) [h](./Med-Bay/h) [v](./Med-Bay/v)
 
 ## Nuclear Reactor
-[EMPTY]
+Quantum algorithms.
+[Quantum Eraser](./Nuclear-Reactor/QuantumEraser)![C# 7.0](./imgs/c-sharp-7.png) ![Quantum](./imgs/quantum.png)
 
 ## Nuka-Cola Bottler
 Nuka-Cola Bottler produces container-related projects.
