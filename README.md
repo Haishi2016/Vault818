@@ -54,15 +54,17 @@ Programs related to computer graphics.
 ## Lounge (C)
 A collection of questions and their solutions.
 
-[Quantum questions](./Lounge/Quantum)
+- [Quantum questions](./Lounge/Quantum)
 
 ## Med Bay
 A collection of terms.
+
 [c](./Med-Bay/c) [h](./Med-Bay/h) [v](./Med-Bay/v)
 
 ## Nuclear Reactor
 Quantum algorithms.
-[Quantum Eraser](./Nuclear-Reactor/QuantumEraser)![C# 7.0](./imgs/c-sharp-7.png) ![Quantum](./imgs/quantum.png)
+
+- [Quantum Eraser](./Nuclear-Reactor/QuantumEraser)![C# 7.0](./imgs/c-sharp-7.png) ![Quantum](./imgs/quantum.png)
 
 ## Nuka-Cola Bottler
 Nuka-Cola Bottler produces container-related projects.
