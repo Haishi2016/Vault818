@@ -3,7 +3,12 @@
 This is a repository for random ideas, demos and small tools. The layout of this repository is inspired by the [Fallout Shelter](https://en.wikipedia.org/wiki/Fallout_Shelter) game. All programs are loosely categorized into different shelter [room types](http://www.ign.com/wikis/fallout-shelter/Rooms). Most programs are self-contained with one exception - all programs are allowed to refer to common libraries under the _Power Generator_ folder.
 
 ## Armory (P)
-[EMPTY]
+Resources for online talks.
+
+### Azure Serverless
+
+- [Lab 1a - Hello, World! with Azure Functions - Visual Studio Experiences](./Armory/Serverless/lab-1-a/hello-world-functions-vs.md)
+- [Lab 1b - Hello, World! with Azure Functions - Portal Experience](./Armory/Serverless/lab-1-b/hello-world-functions-portal.md)
 
 ## Athletics Room (A)
 [EMPTY]
