@@ -9,7 +9,10 @@ Resources for online talks.
 
 - [Lab 1a - Hello, World! with Azure Functions - Visual Studio Experiences](./Armory/Serverless/lab-1-a/hello-world-functions-vs.md)
 - [Lab 1b - Hello, World! with Azure Functions - Portal Experience](./Armory/Serverless/lab-1-b/hello-world-functions-portal.md)
-
+- [Lab 2 - Hello, World! with Azure Logic App](./Armory/Serverless/lab-2/hello-world-logic-apps.md)
+- [Lab 3 - Event Grid with Logic App](./Armory/Serverless/lab-3/event-grid.md)
+- [Lab 4 - API Management + Functions](./Armory/lab-4/apim.md)
+- [Lab 5 - Twitter Sentiment Analysis with Logic App](./Armory/lab-5/logic-app.md)
 ## Athletics Room (A)
 [EMPTY]
 
