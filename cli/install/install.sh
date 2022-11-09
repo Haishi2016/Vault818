@@ -26,6 +26,7 @@
 
 # Symphony CLI location
 SYMPHONY_INSTALL_DIR="/usr/local/bin"
+SYMPHONY_HOME_DIR="${HOME}/.symphony"
 USE_SUDO="false"
 SYMPHONY_HTTP_REQUEST_CLI=curl
 SYMPHONY_GITHUB_ORG=Haishi2016
@@ -183,6 +184,13 @@ installFile() {
         echo "Failed to install $SYMPHONY_CLI_FILENAME"
         exit 1
     fi
+
+    echo "WHAT"
+
+    mkdir -p $SYMPHONY_HOME_DIR
+
+    mv $SYMPHONY_TMP_ROOT/symphony-api* $SYMPHONY_HOME_DIR/
+    mv $SYMPHONY_TMP_ROOT/*.sh $SYMPHONY_HOME_DIR/
 }
 
 cleanUp() {
