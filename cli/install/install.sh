@@ -117,7 +117,7 @@ verifySupported() {
 checkExistingMaestro() {
     if [ -f "$SYMPHONY_CLI_FILE" ]; then
         echo -e "\nMaestro is detected:"
-        $SYMPHONY_CLI_FILE --version
+        $SYMPHONY_CLI_FILE version
         echo -e "Reinstalling Maestro - ${SYMPHONY_CLI_FILE}...\n"
     else
         echo -e "Installing Maestro...\n"
@@ -185,8 +185,6 @@ installFile() {
         exit 1
     fi
 
-    echo "WHAT"
-
     mkdir -p $SYMPHONY_HOME_DIR
 
     mv $SYMPHONY_TMP_ROOT/symphony-api* $SYMPHONY_HOME_DIR/
@@ -200,7 +198,7 @@ cleanUp() {
 }
 
 welcomeMessage() {
-    echo -e "\nTBD"
+    echo -e "\nThank you for installing Maestro, the Symphony CLI. To configure Symphony on your K8s cluster, use: maestro up. If you want to run Symphony in standalone mode without Kubernetes, use: maestro up --no-k8s."
 }
 
 
