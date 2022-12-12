@@ -187,8 +187,7 @@ installFile() {
 
     mkdir -p $SYMPHONY_HOME_DIR
 
-    mv $SYMPHONY_TMP_ROOT/symphony-api* $SYMPHONY_HOME_DIR/
-    mv $SYMPHONY_TMP_ROOT/*.sh $SYMPHONY_HOME_DIR/
+    mv $SYMPHONY_TMP_ROOT/* $SYMPHONY_HOME_DIR/    
 }
 
 cleanUp() {
