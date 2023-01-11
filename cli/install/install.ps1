@@ -24,7 +24,7 @@
 
 param (
     [string]$Version,
-    [string]$SymphonyRoot = "$Env:SystemDrive\symphony",
+    [string]$SymphonyRoot = "$Env:UserProfile\.symphony",
     [string]$SymphonyReleaseUrl = "",
     [scriptblock]$CustomAssetFactory = $null
 )
